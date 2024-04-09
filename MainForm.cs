@@ -264,6 +264,11 @@ public partial class MainForm : Form
     // Type to filter
     private void noteTreeView_KeyPress(object sender, KeyPressEventArgs e)
     {
+        if ((ModifierKeys & Keys.Control) != 0)
+            return;
+        if ((ModifierKeys & Keys.Alt) != 0)
+            return;
+
         if (char.GetUnicodeCategory(e.KeyChar) is UnicodeCategory.Control or UnicodeCategory.OtherNotAssigned)
             return;
 
