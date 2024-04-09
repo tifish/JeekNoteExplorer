@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
-using System.Globalization;
-using BlueMystic;
+﻿using BlueMystic;
 using NHotkey;
 using NHotkey.WindowsForms;
+using System.Diagnostics;
+using System.Globalization;
 
 namespace JeekNoteExplorer;
 
@@ -21,9 +21,7 @@ public partial class MainForm : Form
         // Register global hotkey to open JeekNoteExplorer
         HotkeyManager.Current.AddOrReplace("OpenJeekNote", Keys.Alt | Keys.Oemtilde, OpenJeekNote);
 
-        RootFolder.Folder.FullPath = "D:\\MyNote";
-        RootFolder.Refresh();
-        RefreshTree();
+        RefreshAll();
     }
 
     private void OpenJeekNote(object? sender, HotkeyEventArgs e)
@@ -36,6 +34,16 @@ public partial class MainForm : Form
 
     private void refreshButton_Click(object sender, EventArgs e)
     {
+        RefreshAll();
+    }
+
+    private void RefreshAll()
+    {
+        if (Settings.NoteFolder == "" || !Directory.Exists(Settings.NoteFolder))
+            return;
+
+        RootFolder.Folder.FullPath = Settings.NoteFolder;
+        RootFolder.Refresh();
         RefreshTree();
     }
 
@@ -241,7 +249,13 @@ public partial class MainForm : Form
 
             // F5 to refresh the tree
             case Keys.F5:
-                RefreshTree();
+                RefreshAll();
+                e.Handled = true;
+                break;
+
+            // Ctrl+Alt+S to open settings
+            case Keys.S when e is { Control: true, Alt: true }:
+                settingsButton_Click(sender, e);
                 e.Handled = true;
                 break;
         }
@@ -262,5 +276,11 @@ public partial class MainForm : Form
     {
         RefreshTree();
         filterTextBox.Visible = filterTextBox.Text != "";
+    }
+
+    private void settingsButton_Click(object sender, EventArgs e)
+    {
+        var settingsForm = new SettingsForm();
+        settingsForm.ShowDialog();
     }
 }

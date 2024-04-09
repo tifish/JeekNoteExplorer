@@ -33,12 +33,13 @@
             toolsFlowLayoutPanel = new FlowLayoutPanel();
             filterTextBox = new TextBox();
             tableLayoutPanel1 = new TableLayoutPanel();
+            settingsButton = new Button();
             toolsFlowLayoutPanel.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
-            //
+            // 
             // noteTreeView
-            //
+            // 
             noteTreeView.Dock = DockStyle.Fill;
             noteTreeView.Location = new Point(4, 53);
             noteTreeView.Margin = new Padding(4);
@@ -48,10 +49,11 @@
             noteTreeView.DoubleClick += noteTreeView_DoubleClick;
             noteTreeView.KeyDown += noteTreeView_KeyDown;
             noteTreeView.KeyPress += noteTreeView_KeyPress;
-            //
+            // 
             // refreshButton
-            //
+            // 
             refreshButton.Anchor = AnchorStyles.Left;
+            refreshButton.AutoSize = true;
             refreshButton.Location = new Point(4, 4);
             refreshButton.Margin = new Padding(4);
             refreshButton.Name = "refreshButton";
@@ -60,22 +62,23 @@
             refreshButton.Text = "Refresh(F5)";
             refreshButton.UseVisualStyleBackColor = true;
             refreshButton.Click += refreshButton_Click;
-            //
+            // 
             // toolsFlowLayoutPanel
-            //
+            // 
             toolsFlowLayoutPanel.AutoSize = true;
             toolsFlowLayoutPanel.Controls.Add(refreshButton);
+            toolsFlowLayoutPanel.Controls.Add(settingsButton);
             toolsFlowLayoutPanel.Controls.Add(filterTextBox);
             toolsFlowLayoutPanel.Location = new Point(4, 4);
             toolsFlowLayoutPanel.Margin = new Padding(4);
             toolsFlowLayoutPanel.Name = "toolsFlowLayoutPanel";
-            toolsFlowLayoutPanel.Size = new Size(476, 41);
+            toolsFlowLayoutPanel.Size = new Size(656, 41);
             toolsFlowLayoutPanel.TabIndex = 3;
-            //
+            // 
             // filterTextBox
-            //
+            // 
             filterTextBox.Anchor = AnchorStyles.Left;
-            filterTextBox.Location = new Point(119, 6);
+            filterTextBox.Location = new Point(299, 6);
             filterTextBox.Margin = new Padding(4);
             filterTextBox.Name = "filterTextBox";
             filterTextBox.Size = new Size(353, 29);
@@ -83,9 +86,9 @@
             filterTextBox.Visible = false;
             filterTextBox.WordWrap = false;
             filterTextBox.TextChanged += filterTextBox_TextChanged;
-            //
+            // 
             // tableLayoutPanel1
-            //
+            // 
             tableLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -100,9 +103,22 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.Size = new Size(1129, 686);
             tableLayoutPanel1.TabIndex = 2;
-            //
+            // 
+            // settingsButton
+            // 
+            settingsButton.Anchor = AnchorStyles.Left;
+            settingsButton.AutoSize = true;
+            settingsButton.Location = new Point(119, 4);
+            settingsButton.Margin = new Padding(4);
+            settingsButton.Name = "settingsButton";
+            settingsButton.Size = new Size(172, 33);
+            settingsButton.TabIndex = 3;
+            settingsButton.Text = "Settings(Ctrl+Alt+S)";
+            settingsButton.UseVisualStyleBackColor = true;
+            settingsButton.Click += settingsButton_Click;
+            // 
             // MainForm
-            //
+            // 
             AutoScaleDimensions = new SizeF(10F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1163, 715);
@@ -128,5 +144,6 @@
         private FlowLayoutPanel toolsFlowLayoutPanel;
         private TableLayoutPanel tableLayoutPanel1;
         private TextBox filterTextBox;
+        private Button settingsButton;
     }
 }
