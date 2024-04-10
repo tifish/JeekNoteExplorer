@@ -31,13 +31,19 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             noteTreeView = new TreeView();
+            noteTreeViewContextMenuStrip = new ContextMenuStrip(components);
+            newFileToolStripMenuItem = new ToolStripMenuItem();
+            newfolderToolStripMenuItem = new ToolStripMenuItem();
+            renameToolStripMenuItem = new ToolStripMenuItem();
+            deleteToolStripMenuItem = new ToolStripMenuItem();
             toolsFlowLayoutPanel = new FlowLayoutPanel();
-            settingsButton = new Button();
             filterTextBox = new TextBox();
+            settingsButton = new Button();
             tableLayoutPanel1 = new TableLayoutPanel();
             notifyIcon = new NotifyIcon(components);
             notifyIconContextMenuStrip = new ContextMenuStrip(components);
             exitToolStripMenuItem = new ToolStripMenuItem();
+            noteTreeViewContextMenuStrip.SuspendLayout();
             toolsFlowLayoutPanel.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             notifyIconContextMenuStrip.SuspendLayout();
@@ -45,33 +51,82 @@
             // 
             // noteTreeView
             // 
+            noteTreeView.ContextMenuStrip = noteTreeViewContextMenuStrip;
             noteTreeView.Dock = DockStyle.Fill;
+            noteTreeView.LabelEdit = true;
             noteTreeView.Location = new Point(4, 53);
             noteTreeView.Margin = new Padding(4);
             noteTreeView.Name = "noteTreeView";
             noteTreeView.Size = new Size(1121, 629);
             noteTreeView.TabIndex = 0;
+            noteTreeView.AfterLabelEdit += noteTreeView_AfterLabelEdit;
+            noteTreeView.NodeMouseClick += noteTreeView_NodeMouseClick;
             noteTreeView.DoubleClick += noteTreeView_DoubleClick;
             noteTreeView.KeyDown += noteTreeView_KeyDown;
             noteTreeView.KeyPress += noteTreeView_KeyPress;
             noteTreeView.Leave += noteTreeView_Leave;
             // 
+            // noteTreeViewContextMenuStrip
+            // 
+            noteTreeViewContextMenuStrip.Items.AddRange(new ToolStripItem[] { newFileToolStripMenuItem, newfolderToolStripMenuItem, renameToolStripMenuItem, deleteToolStripMenuItem });
+            noteTreeViewContextMenuStrip.Name = "notifyIconContextMenuStrip";
+            noteTreeViewContextMenuStrip.Size = new Size(135, 92);
+            // 
+            // newFileToolStripMenuItem
+            // 
+            newFileToolStripMenuItem.Name = "newFileToolStripMenuItem";
+            newFileToolStripMenuItem.Size = new Size(180, 22);
+            newFileToolStripMenuItem.Text = "&New File";
+            newFileToolStripMenuItem.Click += newFileToolStripMenuItem_Click;
+            // 
+            // newfolderToolStripMenuItem
+            // 
+            newfolderToolStripMenuItem.Name = "newfolderToolStripMenuItem";
+            newfolderToolStripMenuItem.Size = new Size(180, 22);
+            newfolderToolStripMenuItem.Text = "New &Folder";
+            newfolderToolStripMenuItem.Click += newfolderToolStripMenuItem_Click;
+            // 
+            // renameToolStripMenuItem
+            // 
+            renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            renameToolStripMenuItem.Size = new Size(180, 22);
+            renameToolStripMenuItem.Text = "&Rename";
+            renameToolStripMenuItem.Click += renameToolStripMenuItem_Click;
+            // 
+            // deleteToolStripMenuItem
+            // 
+            deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            deleteToolStripMenuItem.Size = new Size(180, 22);
+            deleteToolStripMenuItem.Text = "&Delete";
+            deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
+            // 
             // toolsFlowLayoutPanel
             // 
             toolsFlowLayoutPanel.AutoSize = true;
-            toolsFlowLayoutPanel.Controls.Add(settingsButton);
             toolsFlowLayoutPanel.Controls.Add(filterTextBox);
+            toolsFlowLayoutPanel.Controls.Add(settingsButton);
             toolsFlowLayoutPanel.Location = new Point(4, 4);
             toolsFlowLayoutPanel.Margin = new Padding(4);
             toolsFlowLayoutPanel.Name = "toolsFlowLayoutPanel";
             toolsFlowLayoutPanel.Size = new Size(541, 41);
             toolsFlowLayoutPanel.TabIndex = 3;
             // 
+            // filterTextBox
+            // 
+            filterTextBox.Anchor = AnchorStyles.Left;
+            filterTextBox.Location = new Point(4, 6);
+            filterTextBox.Margin = new Padding(4);
+            filterTextBox.Name = "filterTextBox";
+            filterTextBox.Size = new Size(353, 29);
+            filterTextBox.TabIndex = 2;
+            filterTextBox.Visible = false;
+            filterTextBox.TextChanged += filterTextBox_TextChanged;
+            // 
             // settingsButton
             // 
             settingsButton.Anchor = AnchorStyles.Left;
             settingsButton.AutoSize = true;
-            settingsButton.Location = new Point(4, 4);
+            settingsButton.Location = new Point(365, 4);
             settingsButton.Margin = new Padding(4);
             settingsButton.Name = "settingsButton";
             settingsButton.Size = new Size(172, 33);
@@ -79,18 +134,6 @@
             settingsButton.Text = "Settings(Ctrl+Alt+S)";
             settingsButton.UseVisualStyleBackColor = true;
             settingsButton.Click += settingsButton_Click;
-            // 
-            // filterTextBox
-            // 
-            filterTextBox.Anchor = AnchorStyles.Left;
-            filterTextBox.Location = new Point(184, 6);
-            filterTextBox.Margin = new Padding(4);
-            filterTextBox.Name = "filterTextBox";
-            filterTextBox.Size = new Size(353, 29);
-            filterTextBox.TabIndex = 2;
-            filterTextBox.Visible = false;
-            filterTextBox.WordWrap = false;
-            filterTextBox.TextChanged += filterTextBox_TextChanged;
             // 
             // tableLayoutPanel1
             // 
@@ -145,6 +188,7 @@
             Activated += MainForm_Activated;
             FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
+            noteTreeViewContextMenuStrip.ResumeLayout(false);
             toolsFlowLayoutPanel.ResumeLayout(false);
             toolsFlowLayoutPanel.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
@@ -163,5 +207,10 @@
         private NotifyIcon notifyIcon;
         private ContextMenuStrip notifyIconContextMenuStrip;
         private ToolStripMenuItem exitToolStripMenuItem;
+        private ContextMenuStrip noteTreeViewContextMenuStrip;
+        private ToolStripMenuItem newFileToolStripMenuItem;
+        private ToolStripMenuItem newfolderToolStripMenuItem;
+        private ToolStripMenuItem renameToolStripMenuItem;
+        private ToolStripMenuItem deleteToolStripMenuItem;
     }
 }

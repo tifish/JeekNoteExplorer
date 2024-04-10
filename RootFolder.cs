@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace JeekNoteExplorer;
+﻿namespace JeekNoteExplorer;
 
 static class RootFolder
 {
@@ -63,28 +61,6 @@ static class RootFolder
 
     public static event EventHandler? Changed;
 
-    // English first, then the current culture language
-    private static readonly Comparer<string> StringComparer = Comparer<string>.Create((x, y) =>
-    {
-        if ((IsEnglish(x) && IsEnglish(y)) || (!IsEnglish(x) && !IsEnglish(y)))
-            return string.Compare(x, y, CultureInfo.CurrentCulture, CompareOptions.StringSort);
-
-        // x first
-        if (IsEnglish(x) && !IsEnglish(y))
-            return -1;
-
-        // y first
-        return 1;
-
-        bool IsEnglish(string s)
-        {
-            return s.All(c => c <= 'z');
-        }
-    });
-
-    private static readonly Comparer<Document> DocumentComparer = Comparer<Document>.Create((x, y) =>
-        StringComparer.Compare(x.Name, y.Name));
-
     private static void OnFileCreated(object sender, FileSystemEventArgs e)
     {
         var docName = Path.GetFileName(e.FullPath);
@@ -117,7 +93,7 @@ static class RootFolder
                         Parent = parentFolder,
                     };
                     parentFolder.Files.Add(document);
-                    parentFolder.Files.Sort(DocumentComparer);
+                    parentFolder.SortFiles();
                 }
                 else
                 {
@@ -129,7 +105,7 @@ static class RootFolder
                     };
 
                     parentFolder.SubFolders.Add(subFolder);
-                    parentFolder.SubFolders.Sort(DocumentComparer);
+                    parentFolder.SortSubFolders();
                 }
             });
         }
@@ -182,9 +158,9 @@ static class RootFolder
                 doc.Name = docName;
                 doc.FullPath = e.FullPath;
                 if (doc.IsFile)
-                    doc.Parent?.Files.Sort(DocumentComparer);
+                    doc.Parent?.SortFiles();
                 else
-                    doc.Parent?.SubFolders.Sort(DocumentComparer);
+                    doc.Parent?.SortSubFolders();
             });
         }
         finally
@@ -219,7 +195,6 @@ static class RootFolder
     {
         folder.SubFolders.Clear();
         var subDirs = Directory.GetDirectories(folder.FullPath);
-        Array.Sort(subDirs, StringComparer);
         foreach (var subDir in subDirs)
         {
             var dirName = Path.GetFileName(subDir);
@@ -237,9 +212,10 @@ static class RootFolder
             RefreshFolder(subFolder);
         }
 
+        folder.SortSubFolders();
+
         folder.Files.Clear();
         var files = Directory.GetFiles(folder.FullPath);
-        Array.Sort(files, StringComparer);
         foreach (var file in files)
         {
             var fileName = Path.GetFileName(file);
@@ -254,6 +230,8 @@ static class RootFolder
             };
             folder.Files.Add(document);
         }
+
+        folder.SortFiles();
     }
 
     private static bool IsIgnored(string dirName)

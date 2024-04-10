@@ -1,34 +1,33 @@
-﻿namespace JeekNoteExplorer
+﻿namespace JeekNoteExplorer;
+
+class Document
 {
-    class Document
+    public string Name { get; set; } = "";
+    public string FullPath { get; set; } = "";
+    public Folder? Parent { get; set; }
+    public virtual bool IsFile => true;
+    public bool IsFolder => !IsFile;
+
+    public Folder ToFolder()
     {
-        public string Name { get; set; } = "";
-        public string FullPath { get; set; } = "";
-        public Folder? Parent { get; set; }
-        public virtual bool IsFile => true;
-        public bool IsFolder => !IsFile;
+        return (Folder)this;
+    }
 
-        public Folder ToFolder()
-        {
-            return (Folder)this;
-        }
+    public bool MatchFilter(string filter)
+    {
+        return filter == "" || Name.Contains(filter, StringComparison.OrdinalIgnoreCase);
+    }
 
-        public bool MatchFilter(string filter)
-        {
-            return filter == "" || Name.Contains(filter, StringComparison.OrdinalIgnoreCase);
-        }
+    public void Delete()
+    {
+        if (Parent == null)
+            return;
 
-        public void Delete()
-        {
-            if (Parent == null)
-                return;
+        if (IsFile)
+            Parent.Files.Remove(this);
+        else
+            Parent.SubFolders.Remove(ToFolder());
 
-            if (IsFile)
-                Parent.Files.Remove(this);
-            else
-                Parent.SubFolders.Remove(this.ToFolder());
-
-            Parent = null;
-        }
+        Parent = null;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BlueMystic;
+using Microsoft.VisualBasic.FileIO;
 using NHotkey;
 using NHotkey.WindowsForms;
 using System.Diagnostics;
@@ -53,9 +54,10 @@ public partial class MainForm : Form
         RefreshTree();
     }
 
+    private string _selectedPathAfterRefresh = "";
+
     private void RefreshTree()
     {
-        var selectedPath = "";
         var selectedPathPassed = false;
         TreeNode? selectedNode = null;
 
@@ -66,8 +68,9 @@ public partial class MainForm : Form
 
         try
         {
-            if (noteTreeView.SelectedNode != null)
-                selectedPath = noteTreeView.SelectedNode.GetDocument().FullPath;
+            if (_selectedPathAfterRefresh == "" && noteTreeView.SelectedNode != null)
+                _selectedPathAfterRefresh = noteTreeView.SelectedNode.GetDocument().FullPath;
+
             noteTreeView.Nodes.Clear();
 
             AddFolderToNode(RootFolder.Root, noteTreeView.Nodes);
@@ -85,6 +88,7 @@ public partial class MainForm : Form
             {
                 noteTreeView.SelectedNode = selectedNode;
                 noteTreeView.SelectedNode.EnsureVisible();
+                _selectedPathAfterRefresh = "";
             }
         }
 
@@ -96,11 +100,8 @@ public partial class MainForm : Form
 
             foreach (var doc in folder.SubFolders.Concat(folder.Files))
             {
-                if (selectedPath != "" && selectedPath == doc.FullPath)
-                {
-                    selectedPath = "";
+                if (!selectedPathPassed && _selectedPathAfterRefresh != "" && _selectedPathAfterRefresh == doc.FullPath)
                     selectedPathPassed = true;
-                }
 
                 TreeNode? subNode = null;
                 var shouldAdd = false;
@@ -111,11 +112,8 @@ public partial class MainForm : Form
                     subNode.SetDocument(doc);
                     shouldAdd = true;
 
-                    if (selectedPathPassed)
-                    {
-                        selectedPathPassed = false;
+                    if (selectedPathPassed && selectedNode == null)
                         selectedNode = subNode;
-                    }
                 }
 
                 if (doc.IsFolder)
@@ -294,7 +292,129 @@ public partial class MainForm : Form
                 settingsButton_Click(sender, e);
                 e.Handled = true;
                 break;
+
+            // Ctrl+N to create a new file
+            case { KeyCode: Keys.N, Control: true, Alt: false, Shift: false }:
+                CreateNewFile();
+                e.Handled = true;
+                break;
+
+            // F7 to create a new folder
+            case { KeyCode: Keys.F7, Control: false, Alt: false, Shift: false }:
+                CreateNewDirectory();
+                e.Handled = true;
+                break;
+
+            // F2 to rename the selected node
+            case { KeyCode: Keys.F2, Control: false, Alt: false, Shift: false }:
+                RenameSelectedNode();
+                e.Handled = true;
+                break;
+
+            // Del to delete the selected node
+            case { KeyCode: Keys.Delete, Control: false, Alt: false, Shift: false }:
+                DeleteSelectedNode();
+                e.Handled = true;
+                break;
         }
+    }
+
+    private void CreateNewFile()
+    {
+        CreateNewFileOrDirectory(true);
+    }
+
+    private void CreateNewDirectory()
+    {
+        CreateNewFileOrDirectory(false);
+    }
+
+    private bool _isCreating;
+
+    private void CreateNewFileOrDirectory(bool isFile)
+    {
+        if (noteTreeView.SelectedNode == null)
+            return;
+        if (noteTreeView.SelectedNode.IsEditing)
+            return;
+
+        var selectedNode = noteTreeView.SelectedNode;
+        var parentNode = selectedNode.IsFolder() ? selectedNode : selectedNode.Parent;
+        var parentPath = parentNode?.GetDocument().FullPath ?? RootFolder.Root.FullPath;
+        var parentNodes = parentNode == null ? noteTreeView.Nodes : parentNode.Nodes;
+        var newNode = new TreeNode();
+        parentNodes.Add(newNode);
+        selectedNode.Expand();
+
+        _isCreating = true;
+        noteTreeView.AfterLabelEdit += OnNoteTreeViewOnAfterLabelEdit;
+        newNode.BeginEdit();
+
+        return;
+
+        void OnNoteTreeViewOnAfterLabelEdit(object? sender, NodeLabelEditEventArgs e)
+        {
+            noteTreeView.AfterLabelEdit -= OnNoteTreeViewOnAfterLabelEdit;
+
+            try
+            {
+                if (e.Label == null || e.Node == null)
+                    return;
+
+                var newPath = Path.Combine(parentPath, e.Label);
+                if (File.Exists(newPath) || Directory.Exists(newPath))
+                    return;
+
+                try
+                {
+                    if (isFile)
+                        File.WriteAllText(newPath, "");
+                    else
+                        Directory.CreateDirectory(newPath);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Failed to create {Type} {File}, exception: {Exception}",
+                        isFile ? "file" : "directory", newPath, ex.Message);
+                    return;
+                }
+
+                _selectedPathAfterRefresh = newPath;
+            }
+            finally
+            {
+                parentNodes.Remove(newNode);
+
+                _isCreating = false;
+
+                noteTreeView.SelectedNode?.EnsureVisible();
+            }
+        }
+    }
+
+    private void RenameSelectedNode()
+    {
+        if (noteTreeView.SelectedNode == null)
+            return;
+        if (noteTreeView.SelectedNode.IsEditing)
+            return;
+
+        noteTreeView.SelectedNode.BeginEdit();
+    }
+
+    private void DeleteSelectedNode()
+    {
+        if (noteTreeView.SelectedNode == null)
+            return;
+
+        var nextSelectedNode = noteTreeView.SelectedNode.NextVisibleNode ?? noteTreeView.SelectedNode.PrevVisibleNode;
+        _selectedPathAfterRefresh = nextSelectedNode?.GetDocument().FullPath ?? "";
+
+        var doc = noteTreeView.SelectedNode.GetDocument();
+        if (doc.IsFile)
+            FileSystem.DeleteFile(doc.FullPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+        else
+            FileSystem.DeleteDirectory(doc.FullPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
     }
 
     // Type to filter
@@ -355,5 +475,68 @@ public partial class MainForm : Form
             else
                 Show();
         }
+    }
+
+    private void noteTreeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+    {
+        if (_isCreating)
+            return;
+
+        e.CancelEdit = true;
+
+        try
+        {
+            if (e.Label == null || e.Node == null)
+                return;
+
+            var doc = e.Node.GetDocument();
+            if (doc.Name == e.Label)
+                return;
+
+            var newPath = Path.Combine(Path.GetDirectoryName(doc.FullPath)!, e.Label);
+            if (File.Exists(newPath) || Directory.Exists(newPath))
+                return;
+
+            try
+            {
+                FileSystem.RenameFile(doc.FullPath, e.Label);
+                e.CancelEdit = false;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to rename {Type} {OldName} to {NewName}, exception: {Exception}",
+                    doc.IsFile ? "file" : "directory", doc.FullPath, e.Label, ex.Message);
+            }
+        }
+        finally
+        {
+            noteTreeView.SelectedNode?.EnsureVisible();
+        }
+    }
+
+    private void newFileToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        CreateNewFile();
+    }
+
+    private void newfolderToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        CreateNewDirectory();
+    }
+
+    private void renameToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        RenameSelectedNode();
+    }
+
+    private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        DeleteSelectedNode();
+    }
+
+    private void noteTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+    {
+        if (e.Button == MouseButtons.Right)
+            noteTreeView.SelectedNode = e.Node;
     }
 }
