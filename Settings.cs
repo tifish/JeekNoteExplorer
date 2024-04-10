@@ -8,6 +8,7 @@ public class AppSettings
     public static readonly string ExePath = Application.ExecutablePath;
     public static readonly string ExeDirectory = Path.GetDirectoryName(ExePath)!;
     public static readonly string SettingsFilePath = Path.ChangeExtension(ExePath, ".json");
+    public static readonly string AppName = Path.GetFileNameWithoutExtension(ExePath);
 
     public static void Load()
     {
@@ -25,6 +26,20 @@ public class AppSettings
     }
 
     public string NoteFolder { get; set; } = "";
+
+    private const string RunRegistryKey = @"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+
+    public bool StartWithSystem
+    {
+        get => RegistryHelper.GetValue(RunRegistryKey, AppName, "") == ExePath;
+        set
+        {
+            if (value)
+                RegistryHelper.SetValue(RunRegistryKey, AppName, ExePath);
+            else
+                RegistryHelper.DeleteValue(RunRegistryKey, AppName);
+        }
+    }
 }
 
 public static class SettingsSingletonContainer

@@ -20,6 +20,7 @@ namespace JeekNoteExplorer
         private void SettingsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Settings.NoteFolder = noteFolderTextBox.Text;
+            Settings.StartWithSystem = startWithSystemCheckBox.Checked;
 
             AppSettings.Save();
         }
@@ -27,6 +28,7 @@ namespace JeekNoteExplorer
         private void SettingsForm_Load(object sender, EventArgs e)
         {
             noteFolderTextBox.Text = Settings.NoteFolder;
+            startWithSystemCheckBox.Checked = Settings.StartWithSystem;
         }
     }
 }

@@ -32,6 +32,7 @@
             label1 = new Label();
             noteFolderTextBox = new TextBox();
             closeButton = new Button();
+            startWithSystemCheckBox = new CheckBox();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -44,8 +45,9 @@
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
             tableLayoutPanel1.Controls.Add(noteFolderTextBox, 1, 0);
             tableLayoutPanel1.Controls.Add(closeButton, 1, 2);
+            tableLayoutPanel1.Controls.Add(startWithSystemCheckBox, 0, 1);
             tableLayoutPanel1.Location = new Point(17, 17);
-            tableLayoutPanel1.Margin = new Padding(4, 4, 4, 4);
+            tableLayoutPanel1.Margin = new Padding(4);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 3;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
@@ -58,7 +60,7 @@
             // 
             label1.Anchor = AnchorStyles.Right;
             label1.AutoSize = true;
-            label1.Location = new Point(4, 8);
+            label1.Location = new Point(60, 8);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
             label1.Size = new Size(102, 21);
@@ -68,8 +70,8 @@
             // noteFolderTextBox
             // 
             noteFolderTextBox.Anchor = AnchorStyles.Left;
-            noteFolderTextBox.Location = new Point(114, 4);
-            noteFolderTextBox.Margin = new Padding(4, 4, 4, 4);
+            noteFolderTextBox.Location = new Point(170, 4);
+            noteFolderTextBox.Margin = new Padding(4);
             noteFolderTextBox.Name = "noteFolderTextBox";
             noteFolderTextBox.Size = new Size(427, 29);
             noteFolderTextBox.TabIndex = 2;
@@ -78,14 +80,26 @@
             // 
             closeButton.Anchor = AnchorStyles.Right;
             closeButton.AutoSize = true;
-            closeButton.Location = new Point(610, 69);
-            closeButton.Margin = new Padding(4, 4, 4, 4);
+            closeButton.Location = new Point(610, 84);
+            closeButton.Margin = new Padding(4);
             closeButton.Name = "closeButton";
             closeButton.Size = new Size(107, 39);
             closeButton.TabIndex = 3;
             closeButton.Text = "Close";
             closeButton.UseVisualStyleBackColor = true;
             closeButton.Click += closeButton_Click;
+            // 
+            // startWithSystemCheckBox
+            // 
+            startWithSystemCheckBox.Anchor = AnchorStyles.Left;
+            startWithSystemCheckBox.AutoSize = true;
+            startWithSystemCheckBox.CheckAlign = ContentAlignment.MiddleRight;
+            startWithSystemCheckBox.Location = new Point(3, 40);
+            startWithSystemCheckBox.Name = "startWithSystemCheckBox";
+            startWithSystemCheckBox.Size = new Size(160, 25);
+            startWithSystemCheckBox.TabIndex = 4;
+            startWithSystemCheckBox.Text = "&Start with system";
+            startWithSystemCheckBox.UseVisualStyleBackColor = true;
             // 
             // SettingsForm
             // 
@@ -97,7 +111,7 @@
             ClientSize = new Size(1143, 630);
             Controls.Add(tableLayoutPanel1);
             Font = new Font("Microsoft YaHei", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Margin = new Padding(4, 4, 4, 4);
+            Margin = new Padding(4);
             Name = "SettingsForm";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Settings";
@@ -115,5 +129,6 @@
         private Label label1;
         private TextBox noteFolderTextBox;
         private Button closeButton;
+        private CheckBox startWithSystemCheckBox;
     }
 }
