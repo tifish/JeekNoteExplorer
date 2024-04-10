@@ -205,9 +205,9 @@ public partial class MainForm : Form
 
     private void noteTreeView_KeyDown(object sender, KeyEventArgs e)
     {
-        switch (e.KeyCode)
+        switch (e)
         {
-            case Keys.Enter:
+            case { KeyCode: Keys.Enter, Control: false, Alt: false, Shift: false }:
                 e.Handled = true;
                 // Open file
                 if (!OpenFileNode())
@@ -216,7 +216,7 @@ public partial class MainForm : Form
                 break;
 
             // Backspace to delete the last filter text character
-            case Keys.Back:
+            case { KeyCode: Keys.Back, Control: false, Alt: false, Shift: false }:
                 if (filterTextBox.Text.Length > 0)
                 {
                     filterTextBox.Text = filterTextBox.Text[..^1];
@@ -226,7 +226,7 @@ public partial class MainForm : Form
                 break;
 
             // Escape to clear the filter text
-            case Keys.Escape:
+            case { KeyCode: Keys.Escape, Control: false, Alt: false, Shift: false }:
                 if (filterTextBox.Text != "")
                 {
                     filterTextBox.Text = "";
@@ -236,7 +236,7 @@ public partial class MainForm : Form
                 break;
 
             // Up and Down to navigate matching nodes
-            case Keys.Up:
+            case { KeyCode: Keys.Up, Control: false, Alt: false, Shift: false }:
                 if (filterTextBox.Text == "")
                     break;
                 if (noteTreeView.SelectedNode == null)
@@ -259,7 +259,7 @@ public partial class MainForm : Form
                 break;
 
             // Up and Down to navigate matching nodes
-            case Keys.Down:
+            case { KeyCode: Keys.Down, Control: false, Alt: false, Shift: false }:
                 if (filterTextBox.Text == "")
                     break;
                 if (noteTreeView.SelectedNode == null)
@@ -281,14 +281,15 @@ public partial class MainForm : Form
 
                 break;
 
-            // F5 to refresh the tree
-            case Keys.F5:
+            // Ctrl+R or F5 to refresh the tree
+            case { KeyCode: Keys.R, Control: true, Alt: false, Shift: false }:
+            case { KeyCode: Keys.F5, Control: false, Alt: false, Shift: false }:
                 RefreshAll();
                 e.Handled = true;
                 break;
 
             // Ctrl+Alt+S to open settings
-            case Keys.S when e is { Control: true, Alt: true }:
+            case { KeyCode: Keys.S, Control: true, Alt: true, Shift: false }:
                 settingsButton_Click(sender, e);
                 e.Handled = true;
                 break;
