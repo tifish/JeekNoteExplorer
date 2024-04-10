@@ -22,6 +22,16 @@ public partial class MainForm : Form
         HotkeyManager.Current.AddOrReplace("OpenJeekNote", Keys.Alt | Keys.Oemtilde, OpenJeekNote);
 
         RefreshAll();
+
+        RootFolder.Changed += RootFolderOnChanged;
+    }
+
+    private void RootFolderOnChanged(object? sender, EventArgs e)
+    {
+        if (filterTextBox.Text != "")
+            return;
+
+        RefreshTree();
     }
 
     private void OpenJeekNote(object? sender, HotkeyEventArgs e)
@@ -32,17 +42,12 @@ public partial class MainForm : Form
         e.Handled = true;
     }
 
-    private void refreshButton_Click(object sender, EventArgs e)
-    {
-        RefreshAll();
-    }
-
     private void RefreshAll()
     {
         if (Settings.NoteFolder == "" || !Directory.Exists(Settings.NoteFolder))
             return;
 
-        RootFolder.Folder.FullPath = Settings.NoteFolder;
+        RootFolder.Root.FullPath = Settings.NoteFolder;
         RootFolder.Refresh();
         RefreshTree();
     }
@@ -53,20 +58,26 @@ public partial class MainForm : Form
         var selectedPathPassed = false;
         TreeNode? selectedNode = null;
 
+        var expandedPaths = new HashSet<string>();
+        SaveExpandedPaths(noteTreeView.Nodes, expandedPaths);
+
         noteTreeView.BeginUpdate();
+
         try
         {
             if (noteTreeView.SelectedNode != null)
                 selectedPath = noteTreeView.SelectedNode.GetDocument().FullPath;
             noteTreeView.Nodes.Clear();
 
-            AddFolderToNode(RootFolder.Folder, noteTreeView.Nodes);
+            AddFolderToNode(RootFolder.Root, noteTreeView.Nodes);
 
             if (filterTextBox.Text != "")
                 noteTreeView.ExpandAll();
         }
         finally
         {
+            RestoreExpandedPaths(noteTreeView.Nodes, expandedPaths);
+
             noteTreeView.EndUpdate();
 
             if (selectedNode != null)
@@ -126,6 +137,29 @@ public partial class MainForm : Form
             }
 
             return hasAddedNode;
+        }
+
+        void SaveExpandedPaths(TreeNodeCollection nodes, HashSet<string> paths)
+        {
+            foreach (TreeNode node in nodes)
+            {
+                if (node.IsExpanded)
+                    paths.Add(node.GetDocument().FullPath);
+                if (node.Nodes.Count > 0)
+                    SaveExpandedPaths(node.Nodes, paths);
+            }
+        }
+
+        void RestoreExpandedPaths(TreeNodeCollection nodes, HashSet<string> paths)
+        {
+            foreach (TreeNode node in nodes)
+            {
+                if (node.Nodes.Count == 0)
+                    continue;
+                if (paths.Contains(node.GetDocument().FullPath))
+                    node.Expand();
+                RestoreExpandedPaths(node.Nodes, paths);
+            }
         }
     }
 

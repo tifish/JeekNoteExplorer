@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NHotkey.WindowsForms" Version="3.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00972" />
   </ItemGroup>
 
 </Project>

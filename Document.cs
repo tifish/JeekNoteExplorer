@@ -17,5 +17,18 @@
         {
             return filter == "" || Name.Contains(filter, StringComparison.OrdinalIgnoreCase);
         }
+
+        public void Delete()
+        {
+            if (Parent == null)
+                return;
+
+            if (IsFile)
+                Parent.Files.Remove(this);
+            else
+                Parent.SubFolders.Remove(this.ToFolder());
+
+            Parent = null;
+        }
     }
 }

@@ -29,11 +29,10 @@
         private void InitializeComponent()
         {
             noteTreeView = new TreeView();
-            refreshButton = new Button();
             toolsFlowLayoutPanel = new FlowLayoutPanel();
+            settingsButton = new Button();
             filterTextBox = new TextBox();
             tableLayoutPanel1 = new TableLayoutPanel();
-            settingsButton = new Button();
             toolsFlowLayoutPanel.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
@@ -50,35 +49,34 @@
             noteTreeView.KeyDown += noteTreeView_KeyDown;
             noteTreeView.KeyPress += noteTreeView_KeyPress;
             // 
-            // refreshButton
-            // 
-            refreshButton.Anchor = AnchorStyles.Left;
-            refreshButton.AutoSize = true;
-            refreshButton.Location = new Point(4, 4);
-            refreshButton.Margin = new Padding(4);
-            refreshButton.Name = "refreshButton";
-            refreshButton.Size = new Size(107, 33);
-            refreshButton.TabIndex = 1;
-            refreshButton.Text = "Refresh(F5)";
-            refreshButton.UseVisualStyleBackColor = true;
-            refreshButton.Click += refreshButton_Click;
-            // 
             // toolsFlowLayoutPanel
             // 
             toolsFlowLayoutPanel.AutoSize = true;
-            toolsFlowLayoutPanel.Controls.Add(refreshButton);
             toolsFlowLayoutPanel.Controls.Add(settingsButton);
             toolsFlowLayoutPanel.Controls.Add(filterTextBox);
             toolsFlowLayoutPanel.Location = new Point(4, 4);
             toolsFlowLayoutPanel.Margin = new Padding(4);
             toolsFlowLayoutPanel.Name = "toolsFlowLayoutPanel";
-            toolsFlowLayoutPanel.Size = new Size(656, 41);
+            toolsFlowLayoutPanel.Size = new Size(541, 41);
             toolsFlowLayoutPanel.TabIndex = 3;
+            // 
+            // settingsButton
+            // 
+            settingsButton.Anchor = AnchorStyles.Left;
+            settingsButton.AutoSize = true;
+            settingsButton.Location = new Point(4, 4);
+            settingsButton.Margin = new Padding(4);
+            settingsButton.Name = "settingsButton";
+            settingsButton.Size = new Size(172, 33);
+            settingsButton.TabIndex = 3;
+            settingsButton.Text = "Settings(Ctrl+Alt+S)";
+            settingsButton.UseVisualStyleBackColor = true;
+            settingsButton.Click += settingsButton_Click;
             // 
             // filterTextBox
             // 
             filterTextBox.Anchor = AnchorStyles.Left;
-            filterTextBox.Location = new Point(299, 6);
+            filterTextBox.Location = new Point(184, 6);
             filterTextBox.Margin = new Padding(4);
             filterTextBox.Name = "filterTextBox";
             filterTextBox.Size = new Size(353, 29);
@@ -104,19 +102,6 @@
             tableLayoutPanel1.Size = new Size(1129, 686);
             tableLayoutPanel1.TabIndex = 2;
             // 
-            // settingsButton
-            // 
-            settingsButton.Anchor = AnchorStyles.Left;
-            settingsButton.AutoSize = true;
-            settingsButton.Location = new Point(119, 4);
-            settingsButton.Margin = new Padding(4);
-            settingsButton.Name = "settingsButton";
-            settingsButton.Size = new Size(172, 33);
-            settingsButton.TabIndex = 3;
-            settingsButton.Text = "Settings(Ctrl+Alt+S)";
-            settingsButton.UseVisualStyleBackColor = true;
-            settingsButton.Click += settingsButton_Click;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(10F, 21F);
@@ -140,7 +125,6 @@
         #endregion
 
         private TreeView noteTreeView;
-        private Button refreshButton;
         private FlowLayoutPanel toolsFlowLayoutPanel;
         private TableLayoutPanel tableLayoutPanel1;
         private TextBox filterTextBox;
