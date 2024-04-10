@@ -33,7 +33,7 @@
             noteTreeView = new TreeView();
             noteTreeViewContextMenuStrip = new ContextMenuStrip(components);
             newFileToolStripMenuItem = new ToolStripMenuItem();
-            newfolderToolStripMenuItem = new ToolStripMenuItem();
+            newFolderToolStripMenuItem = new ToolStripMenuItem();
             renameToolStripMenuItem = new ToolStripMenuItem();
             deleteToolStripMenuItem = new ToolStripMenuItem();
             toolsFlowLayoutPanel = new FlowLayoutPanel();
@@ -43,6 +43,7 @@
             notifyIcon = new NotifyIcon(components);
             notifyIconContextMenuStrip = new ContextMenuStrip(components);
             exitToolStripMenuItem = new ToolStripMenuItem();
+            openToolStripMenuItem = new ToolStripMenuItem();
             noteTreeViewContextMenuStrip.SuspendLayout();
             toolsFlowLayoutPanel.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -68,27 +69,30 @@
             // 
             // noteTreeViewContextMenuStrip
             // 
-            noteTreeViewContextMenuStrip.Items.AddRange(new ToolStripItem[] { newFileToolStripMenuItem, newfolderToolStripMenuItem, renameToolStripMenuItem, deleteToolStripMenuItem });
+            noteTreeViewContextMenuStrip.Items.AddRange(new ToolStripItem[] { openToolStripMenuItem, newFileToolStripMenuItem, newFolderToolStripMenuItem, renameToolStripMenuItem, deleteToolStripMenuItem });
             noteTreeViewContextMenuStrip.Name = "notifyIconContextMenuStrip";
-            noteTreeViewContextMenuStrip.Size = new Size(135, 92);
+            noteTreeViewContextMenuStrip.Size = new Size(181, 136);
             // 
             // newFileToolStripMenuItem
             // 
             newFileToolStripMenuItem.Name = "newFileToolStripMenuItem";
+            newFileToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
             newFileToolStripMenuItem.Size = new Size(180, 22);
             newFileToolStripMenuItem.Text = "&New File";
             newFileToolStripMenuItem.Click += newFileToolStripMenuItem_Click;
             // 
-            // newfolderToolStripMenuItem
+            // newFolderToolStripMenuItem
             // 
-            newfolderToolStripMenuItem.Name = "newfolderToolStripMenuItem";
-            newfolderToolStripMenuItem.Size = new Size(180, 22);
-            newfolderToolStripMenuItem.Text = "New &Folder";
-            newfolderToolStripMenuItem.Click += newfolderToolStripMenuItem_Click;
+            newFolderToolStripMenuItem.Name = "newFolderToolStripMenuItem";
+            newFolderToolStripMenuItem.ShortcutKeys = Keys.F7;
+            newFolderToolStripMenuItem.Size = new Size(180, 22);
+            newFolderToolStripMenuItem.Text = "New &Folder";
+            newFolderToolStripMenuItem.Click += newfolderToolStripMenuItem_Click;
             // 
             // renameToolStripMenuItem
             // 
             renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            renameToolStripMenuItem.ShortcutKeys = Keys.F2;
             renameToolStripMenuItem.Size = new Size(180, 22);
             renameToolStripMenuItem.Text = "&Rename";
             renameToolStripMenuItem.Click += renameToolStripMenuItem_Click;
@@ -96,6 +100,7 @@
             // deleteToolStripMenuItem
             // 
             deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            deleteToolStripMenuItem.ShortcutKeys = Keys.Delete;
             deleteToolStripMenuItem.Size = new Size(180, 22);
             deleteToolStripMenuItem.Text = "&Delete";
             deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
@@ -173,6 +178,13 @@
             exitToolStripMenuItem.Text = "E&xit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
+            // openToolStripMenuItem
+            // 
+            openToolStripMenuItem.Name = "openToolStripMenuItem";
+            openToolStripMenuItem.Size = new Size(180, 22);
+            openToolStripMenuItem.Text = "&Open";
+            openToolStripMenuItem.Click += openToolStripMenuItem_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(10F, 21F);
@@ -209,8 +221,9 @@
         private ToolStripMenuItem exitToolStripMenuItem;
         private ContextMenuStrip noteTreeViewContextMenuStrip;
         private ToolStripMenuItem newFileToolStripMenuItem;
-        private ToolStripMenuItem newfolderToolStripMenuItem;
+        private ToolStripMenuItem newFolderToolStripMenuItem;
         private ToolStripMenuItem renameToolStripMenuItem;
         private ToolStripMenuItem deleteToolStripMenuItem;
+        private ToolStripMenuItem openToolStripMenuItem;
     }
 }

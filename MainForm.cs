@@ -208,10 +208,7 @@ public partial class MainForm : Form
         {
             case { KeyCode: Keys.Enter, Control: false, Alt: false, Shift: false }:
                 e.Handled = true;
-                // Open file
-                if (!OpenFileNode())
-                    // Expand folder
-                    OpenFolderNode();
+                OpenSelectedNode();
                 break;
 
             // Backspace to delete the last filter text character
@@ -292,31 +289,15 @@ public partial class MainForm : Form
                 settingsButton_Click(sender, e);
                 e.Handled = true;
                 break;
-
-            // Ctrl+N to create a new file
-            case { KeyCode: Keys.N, Control: true, Alt: false, Shift: false }:
-                CreateNewFile();
-                e.Handled = true;
-                break;
-
-            // F7 to create a new folder
-            case { KeyCode: Keys.F7, Control: false, Alt: false, Shift: false }:
-                CreateNewDirectory();
-                e.Handled = true;
-                break;
-
-            // F2 to rename the selected node
-            case { KeyCode: Keys.F2, Control: false, Alt: false, Shift: false }:
-                RenameSelectedNode();
-                e.Handled = true;
-                break;
-
-            // Del to delete the selected node
-            case { KeyCode: Keys.Delete, Control: false, Alt: false, Shift: false }:
-                DeleteSelectedNode();
-                e.Handled = true;
-                break;
         }
+    }
+
+    private void OpenSelectedNode()
+    {
+        // Open file
+        if (!OpenFileNode())
+            // Expand folder
+            OpenFolderNode();
     }
 
     private void CreateNewFile()
@@ -445,8 +426,13 @@ public partial class MainForm : Form
         settingsForm.ShowDialog();
     }
 
+    private bool _isExiting;
+
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
     {
+        if (_isExiting)
+            return;
+
         e.Cancel = true;
         Hide();
     }
@@ -463,6 +449,7 @@ public partial class MainForm : Form
 
     private void exitToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        _isExiting = true;
         Application.Exit();
     }
 
@@ -512,6 +499,11 @@ public partial class MainForm : Form
         {
             noteTreeView.SelectedNode?.EnsureVisible();
         }
+    }
+
+    private void openToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        OpenSelectedNode();
     }
 
     private void newFileToolStripMenuItem_Click(object sender, EventArgs e)
