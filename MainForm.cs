@@ -13,6 +13,7 @@ public partial class MainForm : Form
     public MainForm()
     {
         InitializeComponent();
+
         _darkMode = new DarkModeCS(this);
     }
 
@@ -225,13 +226,13 @@ public partial class MainForm : Form
 
                 break;
 
-            // Escape to clear the filter text
+            // Esc to clear the filter text or hide the form
             case { KeyCode: Keys.Escape, Control: false, Alt: false, Shift: false }:
                 if (filterTextBox.Text != "")
-                {
                     filterTextBox.Text = "";
-                    e.Handled = true;
-                }
+                else
+                    Hide();
+                e.Handled = true;
 
                 break;
 
@@ -322,5 +323,33 @@ public partial class MainForm : Form
     {
         var settingsForm = new SettingsForm();
         settingsForm.ShowDialog();
+        noteTreeView.Focus();
+    }
+
+    private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+    {
+        e.Cancel = true;
+        Hide();
+    }
+
+    private void MainForm_Activated(object sender, EventArgs e)
+    {
+        noteTreeView.Focus();
+    }
+
+    private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Application.Exit();
+    }
+
+    private void notifyIcon_MouseClick(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left)
+        {
+            if (Visible)
+                Hide();
+            else
+                Show();
+        }
     }
 }

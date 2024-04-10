@@ -28,13 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             noteTreeView = new TreeView();
             toolsFlowLayoutPanel = new FlowLayoutPanel();
             settingsButton = new Button();
             filterTextBox = new TextBox();
             tableLayoutPanel1 = new TableLayoutPanel();
+            notifyIcon = new NotifyIcon(components);
+            notifyIconContextMenuStrip = new ContextMenuStrip(components);
+            exitToolStripMenuItem = new ToolStripMenuItem();
             toolsFlowLayoutPanel.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
+            notifyIconContextMenuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // noteTreeView
@@ -102,6 +108,27 @@
             tableLayoutPanel1.Size = new Size(1129, 686);
             tableLayoutPanel1.TabIndex = 2;
             // 
+            // notifyIcon
+            // 
+            notifyIcon.ContextMenuStrip = notifyIconContextMenuStrip;
+            notifyIcon.Icon = (Icon)resources.GetObject("notifyIcon.Icon");
+            notifyIcon.Text = "notifyIcon";
+            notifyIcon.Visible = true;
+            notifyIcon.MouseClick += notifyIcon_MouseClick;
+            // 
+            // notifyIconContextMenuStrip
+            // 
+            notifyIconContextMenuStrip.Items.AddRange(new ToolStripItem[] { exitToolStripMenuItem });
+            notifyIconContextMenuStrip.Name = "notifyIconContextMenuStrip";
+            notifyIconContextMenuStrip.Size = new Size(94, 26);
+            // 
+            // exitToolStripMenuItem
+            // 
+            exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            exitToolStripMenuItem.Size = new Size(93, 22);
+            exitToolStripMenuItem.Text = "E&xit";
+            exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(10F, 21F);
@@ -114,11 +141,14 @@
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Jeek Note";
+            Activated += MainForm_Activated;
+            FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
             toolsFlowLayoutPanel.ResumeLayout(false);
             toolsFlowLayoutPanel.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
+            notifyIconContextMenuStrip.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -129,5 +159,8 @@
         private TableLayoutPanel tableLayoutPanel1;
         private TextBox filterTextBox;
         private Button settingsButton;
+        private NotifyIcon notifyIcon;
+        private ContextMenuStrip notifyIconContextMenuStrip;
+        private ToolStripMenuItem exitToolStripMenuItem;
     }
 }
