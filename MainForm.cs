@@ -323,7 +323,6 @@ public partial class MainForm : Form
     {
         var settingsForm = new SettingsForm();
         settingsForm.ShowDialog();
-        noteTreeView.Focus();
     }
 
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -333,6 +332,11 @@ public partial class MainForm : Form
     }
 
     private void MainForm_Activated(object sender, EventArgs e)
+    {
+        noteTreeView.Focus();
+    }
+
+    private void noteTreeView_Leave(object sender, EventArgs e)
     {
         noteTreeView.Focus();
     }
