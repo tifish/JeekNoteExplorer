@@ -54,6 +54,7 @@
             noteTreeView.DoubleClick += noteTreeView_DoubleClick;
             noteTreeView.KeyDown += noteTreeView_KeyDown;
             noteTreeView.KeyPress += noteTreeView_KeyPress;
+            noteTreeView.Leave += noteTreeView_Leave;
             // 
             // toolsFlowLayoutPanel
             // 

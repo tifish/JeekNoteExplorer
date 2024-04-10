@@ -1,4 +1,6 @@
 ﻿using System.Configuration;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace JeekNoteExplorer;
 
