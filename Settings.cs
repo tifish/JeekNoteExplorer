@@ -10,6 +10,7 @@ public class AppSettings
     public static readonly string ExeDirectory = Path.GetDirectoryName(ExePath)!;
     public static readonly string SettingsFilePath =
         Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE")!, @"AppData\Local", AppName, "Settings.json");
+    public static readonly string NewFilesDirectory = Path.Combine(ExeDirectory, "NewFiles");
 
     public static void Load()
     {

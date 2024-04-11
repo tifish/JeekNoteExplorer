@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <OutDir>bin</OutDir>
+    <OutDir>Bin</OutDir>
     <ApplicationIcon>Resources\App.ico</ApplicationIcon>
   </PropertyGroup>
 

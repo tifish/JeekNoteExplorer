@@ -341,9 +341,18 @@ public partial class MainForm : Form
                 try
                 {
                     if (isFile)
-                        File.WriteAllText(newPath, "");
+                    {
+                        var ext = Path.GetExtension(newPath);
+                        var newFileTemplate = Path.Combine(AppSettings.NewFilesDirectory, ext);
+                        if (File.Exists(newFileTemplate))
+                            File.Copy(newFileTemplate, newPath);
+                        else
+                            File.WriteAllText(newPath, "");
+                    }
                     else
+                    {
                         Directory.CreateDirectory(newPath);
+                    }
                 }
                 catch (Exception ex)
                 {
