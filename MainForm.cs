@@ -39,7 +39,8 @@ public partial class MainForm : Form
     private void OpenJeekNote(object? sender, HotkeyEventArgs e)
     {
         Show();
-        BringToFront();
+        if (WindowState == FormWindowState.Minimized)
+            WindowState = FormWindowState.Normal;
         Activate();
         e.Handled = true;
     }
@@ -112,6 +113,7 @@ public partial class MainForm : Form
                     subNode.SetDocument(doc);
                     shouldAdd = true;
 
+                    // Select next visible node if current selected node is not visible
                     if (selectedPathPassed && selectedNode == null)
                         selectedNode = subNode;
                 }
