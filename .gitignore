@@ -396,9 +396,10 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-.idea/
-Bin/Logs
-Bin/*.exe
-Bin/*.dll
-Bin/*.json
-Bin/*.pdb
+/.idea
+/Bin/Logs
+/Bin/*.exe
+/Bin/*.dll
+/Bin/*.json
+/Bin/*.pdb
+/PublishDirectory.txt
