@@ -6,9 +6,10 @@ namespace JeekNoteExplorer;
 public class AppSettings
 {
     public static readonly string ExePath = Application.ExecutablePath;
-    public static readonly string ExeDirectory = Path.GetDirectoryName(ExePath)!;
-    public static readonly string SettingsFilePath = Path.ChangeExtension(ExePath, ".json");
     public static readonly string AppName = Path.GetFileNameWithoutExtension(ExePath);
+    public static readonly string ExeDirectory = Path.GetDirectoryName(ExePath)!;
+    public static readonly string SettingsFilePath =
+        Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE")!, @"AppData\Local", AppName, "Settings.json");
 
     public static void Load()
     {
@@ -22,10 +23,25 @@ public class AppSettings
 
     public static void Save()
     {
+        Directory.CreateDirectory(Path.GetDirectoryName(SettingsFilePath)!);
         File.WriteAllText(SettingsFilePath, JsonConvert.SerializeObject(Settings, Formatting.Indented));
     }
 
-    public string NoteFolder { get; set; } = "";
+    private string _noteFolder = "";
+
+    public string NoteFolder
+    {
+        get => _noteFolder;
+        set
+        {
+            if (_noteFolder == value)
+                return;
+
+            _noteFolder = value;
+            RootFolder.Root.FullPath = value;
+            RootFolder.Refresh();
+        }
+    }
 
     private const string RunRegistryKey = @"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
 

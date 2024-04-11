@@ -16,8 +16,6 @@ static class Program
         // see https://aka.ms/applicationconfiguration.
         ApplicationConfiguration.Initialize();
 
-        AppSettings.Load();
-
         Application.Run(new MainForm());
     }
 }

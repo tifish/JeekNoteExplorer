@@ -23,9 +23,9 @@ public partial class MainForm : Form
         // Register global hotkey to open JeekNoteExplorer
         HotkeyManager.Current.AddOrReplace("OpenJeekNote", Keys.Alt | Keys.Oemtilde, OpenJeekNote);
 
-        RefreshAll();
-
         RootFolder.Changed += RootFolderOnChanged;
+
+        AppSettings.Load();
     }
 
     private void RootFolderOnChanged(object? sender, EventArgs e)
@@ -43,16 +43,6 @@ public partial class MainForm : Form
             WindowState = FormWindowState.Normal;
         Activate();
         e.Handled = true;
-    }
-
-    private void RefreshAll()
-    {
-        if (Settings.NoteFolder == "" || !Directory.Exists(Settings.NoteFolder))
-            return;
-
-        RootFolder.Root.FullPath = Settings.NoteFolder;
-        RootFolder.Refresh();
-        RefreshTree();
     }
 
     private string _selectedPathAfterRefresh = "";
@@ -282,7 +272,7 @@ public partial class MainForm : Form
             // Ctrl+R or F5 to refresh the tree
             case { KeyCode: Keys.R, Control: true, Alt: false, Shift: false }:
             case { KeyCode: Keys.F5, Control: false, Alt: false, Shift: false }:
-                RefreshAll();
+                RootFolder.Refresh();
                 e.Handled = true;
                 break;
 

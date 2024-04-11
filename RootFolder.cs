@@ -46,17 +46,24 @@ static class RootFolder
 
     public static void Refresh()
     {
-        if (!Directory.Exists(Root.FullPath))
-            return;
-
-        RefreshFolder(Root);
-
-        InitOnce();
-        if (_watcher!.Path != Root.FullPath)
+        if (Directory.Exists(Root.FullPath))
         {
-            _watcher.Path = Root.FullPath;
-            _watcher.EnableRaisingEvents = true;
+            RefreshFolder(Root);
+
+            InitOnce();
+            if (_watcher!.Path != Root.FullPath)
+            {
+                _watcher.Path = Root.FullPath;
+                _watcher.EnableRaisingEvents = true;
+            }
         }
+        else
+        {
+            Root.SubFolders.Clear();
+            Root.Files.Clear();
+        }
+
+        Changed?.Invoke(null, EventArgs.Empty);
     }
 
     public static event EventHandler? Changed;
