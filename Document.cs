@@ -1,4 +1,6 @@
-﻿namespace JeekNoteExplorer;
+﻿using System.Text.RegularExpressions;
+
+namespace JeekNoteExplorer;
 
 class Document
 {
@@ -13,9 +15,12 @@ class Document
         return (Folder)this;
     }
 
-    public bool MatchFilter(string filter)
+    public bool MatchFilter(List<Regex> filters)
     {
-        return filter == "" || Name.Contains(filter, StringComparison.OrdinalIgnoreCase);
+        if (filters.Count == 0)
+            return true;
+
+        return filters.All(filter => filter.IsMatch(Name));
     }
 
     public void Delete()

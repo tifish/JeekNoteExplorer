@@ -4,6 +4,7 @@ using NHotkey;
 using NHotkey.WindowsForms;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace JeekNoteExplorer;
 
@@ -97,7 +98,7 @@ public partial class MainForm : Form
                 TreeNode? subNode = null;
                 var shouldAdd = false;
 
-                if (doc.MatchFilter(filterTextBox.Text))
+                if (doc.MatchFilter(_filters))
                 {
                     subNode = new TreeNode();
                     subNode.SetDocument(doc);
@@ -235,7 +236,7 @@ public partial class MainForm : Form
                 var prevNode = noteTreeView.SelectedNode.PrevVisibleNode;
                 while (prevNode != null)
                 {
-                    if (prevNode.GetDocument().MatchFilter(filterTextBox.Text))
+                    if (prevNode.GetDocument().MatchFilter(_filters))
                     {
                         noteTreeView.SelectedNode = prevNode;
                         break;
@@ -258,7 +259,7 @@ public partial class MainForm : Form
                 var nextNode = noteTreeView.SelectedNode.NextVisibleNode;
                 while (nextNode != null)
                 {
-                    if (nextNode.GetDocument().MatchFilter(filterTextBox.Text))
+                    if (nextNode.GetDocument().MatchFilter(_filters))
                     {
                         noteTreeView.SelectedNode = nextNode;
                         break;
@@ -414,11 +415,27 @@ public partial class MainForm : Form
         e.Handled = true;
     }
 
+    private List<Regex> _filters = new();
+
     // Filter tree nodes
     private void filterTextBox_TextChanged(object sender, EventArgs e)
     {
+        var filterText = filterTextBox.Text.Trim();
+        if (filterText == "")
+        {
+            _filters.Clear();
+        }
+        else
+        {
+            _filters = filterText.Split(' ')
+                .Where(filter => filter != "")
+                .Select(filter => new Regex(filter, RegexOptions.IgnoreCase))
+                .ToList();
+        }
+
         RefreshTree();
-        filterTextBox.Visible = filterTextBox.Text != "";
+
+        filterTextBox.Visible = filterText != "";
     }
 
     private void settingsButton_Click(object sender, EventArgs e)
