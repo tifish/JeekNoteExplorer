@@ -1,10 +1,10 @@
-﻿using BlueMystic;
+﻿using System.Diagnostics;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using BlueMystic;
 using Microsoft.VisualBasic.FileIO;
 using NHotkey;
 using NHotkey.WindowsForms;
-using System.Diagnostics;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace JeekNoteExplorer;
 
@@ -47,35 +47,44 @@ public partial class MainForm : Form
     }
 
     private string _selectedPathAfterRefresh = "";
+    private readonly HashSet<string> _expandedPaths = [];
+    private bool _isExpandingAll;
 
     private void RefreshTree()
     {
         var selectedPathPassed = false;
         TreeNode? selectedNode = null;
 
-        var expandedPaths = new HashSet<string>();
-        SaveExpandedPaths(noteTreeView.Nodes, expandedPaths);
+        // Only save expanded paths when no filter => filtered
+        if (!_isExpandingAll)
+        {
+            _expandedPaths.Clear();
+            SaveExpandedPaths(noteTreeView.Nodes, _expandedPaths);
+        }
 
         noteTreeView.BeginUpdate();
 
         try
         {
+            // _selectedPathAfterRefresh can be specified to select a nearest node after refresh.
+            // If it's not specified, use the current selected node.
             if (_selectedPathAfterRefresh == "" && noteTreeView.SelectedNode != null)
                 _selectedPathAfterRefresh = noteTreeView.SelectedNode.GetDocument().FullPath;
 
             noteTreeView.Nodes.Clear();
-
             AddFolderToNode(RootFolder.Root, noteTreeView.Nodes);
-
-            if (filterTextBox.Text != "")
-                noteTreeView.ExpandAll();
         }
         finally
         {
-            RestoreExpandedPaths(noteTreeView.Nodes, expandedPaths);
+            _isExpandingAll = filterTextBox.Text != "";
+            if (_isExpandingAll)
+                noteTreeView.ExpandAll();
+            else // filtered => no filter
+                RestoreExpandedPaths(noteTreeView.Nodes, _expandedPaths);
 
             noteTreeView.EndUpdate();
 
+            // The nearest node to select after refresh
             if (selectedNode != null)
             {
                 noteTreeView.SelectedNode = selectedNode;
@@ -422,16 +431,12 @@ public partial class MainForm : Form
     {
         var filterText = filterTextBox.Text.Trim();
         if (filterText == "")
-        {
             _filters.Clear();
-        }
         else
-        {
             _filters = filterText.Split(' ')
                 .Where(filter => filter != "")
                 .Select(filter => new Regex(filter, RegexOptions.IgnoreCase))
                 .ToList();
-        }
 
         RefreshTree();
 
