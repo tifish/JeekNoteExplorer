@@ -31,9 +31,6 @@ public partial class MainForm : Form
 
     private void RootFolderOnChanged(object? sender, EventArgs e)
     {
-        if (filterTextBox.Text != "")
-            return;
-
         RefreshTree();
     }
 
