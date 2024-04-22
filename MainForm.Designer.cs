@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             noteTreeView = new TreeView();
             noteTreeViewContextMenuStrip = new ContextMenuStrip(components);
+            openToolStripMenuItem = new ToolStripMenuItem();
             newFileToolStripMenuItem = new ToolStripMenuItem();
             newFolderToolStripMenuItem = new ToolStripMenuItem();
             renameToolStripMenuItem = new ToolStripMenuItem();
@@ -43,15 +44,14 @@
             notifyIcon = new NotifyIcon(components);
             notifyIconContextMenuStrip = new ContextMenuStrip(components);
             exitToolStripMenuItem = new ToolStripMenuItem();
-            openToolStripMenuItem = new ToolStripMenuItem();
             noteTreeViewContextMenuStrip.SuspendLayout();
             toolsFlowLayoutPanel.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             notifyIconContextMenuStrip.SuspendLayout();
             SuspendLayout();
-            // 
+            //
             // noteTreeView
-            // 
+            //
             noteTreeView.ContextMenuStrip = noteTreeViewContextMenuStrip;
             noteTreeView.Dock = DockStyle.Fill;
             noteTreeView.LabelEdit = true;
@@ -66,47 +66,54 @@
             noteTreeView.KeyDown += noteTreeView_KeyDown;
             noteTreeView.KeyPress += noteTreeView_KeyPress;
             noteTreeView.Leave += noteTreeView_Leave;
-            // 
+            //
             // noteTreeViewContextMenuStrip
-            // 
+            //
             noteTreeViewContextMenuStrip.Items.AddRange(new ToolStripItem[] { openToolStripMenuItem, newFileToolStripMenuItem, newFolderToolStripMenuItem, renameToolStripMenuItem, deleteToolStripMenuItem });
             noteTreeViewContextMenuStrip.Name = "notifyIconContextMenuStrip";
-            noteTreeViewContextMenuStrip.Size = new Size(181, 136);
-            // 
+            noteTreeViewContextMenuStrip.Size = new Size(163, 114);
+            //
+            // openToolStripMenuItem
+            //
+            openToolStripMenuItem.Name = "openToolStripMenuItem";
+            openToolStripMenuItem.Size = new Size(162, 22);
+            openToolStripMenuItem.Text = "&Open";
+            openToolStripMenuItem.Click += openToolStripMenuItem_Click;
+            //
             // newFileToolStripMenuItem
-            // 
+            //
             newFileToolStripMenuItem.Name = "newFileToolStripMenuItem";
             newFileToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            newFileToolStripMenuItem.Size = new Size(180, 22);
+            newFileToolStripMenuItem.Size = new Size(162, 22);
             newFileToolStripMenuItem.Text = "&New File";
             newFileToolStripMenuItem.Click += newFileToolStripMenuItem_Click;
-            // 
+            //
             // newFolderToolStripMenuItem
-            // 
+            //
             newFolderToolStripMenuItem.Name = "newFolderToolStripMenuItem";
             newFolderToolStripMenuItem.ShortcutKeys = Keys.F7;
-            newFolderToolStripMenuItem.Size = new Size(180, 22);
+            newFolderToolStripMenuItem.Size = new Size(162, 22);
             newFolderToolStripMenuItem.Text = "New &Folder";
             newFolderToolStripMenuItem.Click += newfolderToolStripMenuItem_Click;
-            // 
+            //
             // renameToolStripMenuItem
-            // 
+            //
             renameToolStripMenuItem.Name = "renameToolStripMenuItem";
             renameToolStripMenuItem.ShortcutKeys = Keys.F2;
-            renameToolStripMenuItem.Size = new Size(180, 22);
+            renameToolStripMenuItem.Size = new Size(162, 22);
             renameToolStripMenuItem.Text = "&Rename";
             renameToolStripMenuItem.Click += renameToolStripMenuItem_Click;
-            // 
+            //
             // deleteToolStripMenuItem
-            // 
+            //
             deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             deleteToolStripMenuItem.ShortcutKeys = Keys.Delete;
-            deleteToolStripMenuItem.Size = new Size(180, 22);
+            deleteToolStripMenuItem.Size = new Size(162, 22);
             deleteToolStripMenuItem.Text = "&Delete";
             deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
-            // 
+            //
             // toolsFlowLayoutPanel
-            // 
+            //
             toolsFlowLayoutPanel.AutoSize = true;
             toolsFlowLayoutPanel.Controls.Add(filterTextBox);
             toolsFlowLayoutPanel.Controls.Add(settingsButton);
@@ -115,9 +122,9 @@
             toolsFlowLayoutPanel.Name = "toolsFlowLayoutPanel";
             toolsFlowLayoutPanel.Size = new Size(541, 41);
             toolsFlowLayoutPanel.TabIndex = 3;
-            // 
+            //
             // filterTextBox
-            // 
+            //
             filterTextBox.Anchor = AnchorStyles.Left;
             filterTextBox.Location = new Point(4, 6);
             filterTextBox.Margin = new Padding(4);
@@ -126,9 +133,9 @@
             filterTextBox.TabIndex = 2;
             filterTextBox.Visible = false;
             filterTextBox.TextChanged += filterTextBox_TextChanged;
-            // 
+            //
             // settingsButton
-            // 
+            //
             settingsButton.Anchor = AnchorStyles.Left;
             settingsButton.AutoSize = true;
             settingsButton.Location = new Point(365, 4);
@@ -139,9 +146,9 @@
             settingsButton.Text = "Settings(Ctrl+Alt+S)";
             settingsButton.UseVisualStyleBackColor = true;
             settingsButton.Click += settingsButton_Click;
-            // 
+            //
             // tableLayoutPanel1
-            // 
+            //
             tableLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -156,37 +163,30 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.Size = new Size(1129, 686);
             tableLayoutPanel1.TabIndex = 2;
-            // 
+            //
             // notifyIcon
-            // 
+            //
             notifyIcon.ContextMenuStrip = notifyIconContextMenuStrip;
             notifyIcon.Icon = (Icon)resources.GetObject("notifyIcon.Icon");
             notifyIcon.Text = "notifyIcon";
             notifyIcon.Visible = true;
             notifyIcon.MouseClick += notifyIcon_MouseClick;
-            // 
+            //
             // notifyIconContextMenuStrip
-            // 
+            //
             notifyIconContextMenuStrip.Items.AddRange(new ToolStripItem[] { exitToolStripMenuItem });
             notifyIconContextMenuStrip.Name = "notifyIconContextMenuStrip";
             notifyIconContextMenuStrip.Size = new Size(94, 26);
-            // 
+            //
             // exitToolStripMenuItem
-            // 
+            //
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             exitToolStripMenuItem.Size = new Size(93, 22);
             exitToolStripMenuItem.Text = "E&xit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
-            // 
-            // openToolStripMenuItem
-            // 
-            openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new Size(180, 22);
-            openToolStripMenuItem.Text = "&Open";
-            openToolStripMenuItem.Click += openToolStripMenuItem_Click;
-            // 
+            //
             // MainForm
-            // 
+            //
             AutoScaleDimensions = new SizeF(10F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1163, 715);

@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
 using BlueMystic;
-using Microsoft.VisualBasic.FileIO;
 using NHotkey;
 using NHotkey.WindowsForms;
 
@@ -175,10 +173,7 @@ public partial class MainForm : Form
         if (!doc.IsFile)
             return false;
 
-        Process.Start(new ProcessStartInfo(doc.FullPath)
-        {
-            UseShellExecute = true,
-        });
+        doc.OpenFile();
 
         return true;
     }
@@ -399,11 +394,7 @@ public partial class MainForm : Form
         var nextSelectedNode = noteTreeView.SelectedNode.NextVisibleNode ?? noteTreeView.SelectedNode.PrevVisibleNode;
         _selectedPathAfterRefresh = nextSelectedNode?.GetDocument().FullPath ?? "";
 
-        var doc = noteTreeView.SelectedNode.GetDocument();
-        if (doc.IsFile)
-            FileSystem.DeleteFile(doc.FullPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
-        else
-            FileSystem.DeleteDirectory(doc.FullPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+        noteTreeView.SelectedNode.GetDocument().DeleteInFileSystem();
     }
 
     // Type to filter
@@ -489,6 +480,7 @@ public partial class MainForm : Form
         if (_isCreating)
             return;
 
+        // Is editing
         e.CancelEdit = true;
 
         try
@@ -504,16 +496,8 @@ public partial class MainForm : Form
             if (File.Exists(newPath) || Directory.Exists(newPath))
                 return;
 
-            try
-            {
-                FileSystem.RenameFile(doc.FullPath, e.Label);
+            if (doc.RenameInFileSystem(e.Label))
                 e.CancelEdit = false;
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Failed to rename {Type} {OldName} to {NewName}, exception: {Exception}",
-                    doc.IsFile ? "file" : "directory", doc.FullPath, e.Label, ex.Message);
-            }
         }
         finally
         {
