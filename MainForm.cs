@@ -535,4 +535,14 @@ public partial class MainForm : Form
         if (e.Button == MouseButtons.Right)
             noteTreeView.SelectedNode = e.Node;
     }
+
+    private void renameButton_Click(object sender, EventArgs e)
+    {
+        RenameSelectedNode();
+    }
+
+    private void deleteButton_Click(object sender, EventArgs e)
+    {
+        DeleteSelectedNode();
+    }
 }
