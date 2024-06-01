@@ -199,7 +199,7 @@ public partial class MainForm : Form
             parentFolders.Reverse();
 
             var nodes = noteTreeView.Nodes;
-            TreeNode parentNode = null;
+            TreeNode? parentNode = null;
             foreach (var parentFolder in parentFolders)
             {
                 var treeNode = new TreeNode();
