@@ -119,11 +119,11 @@
             // toolsFlowLayoutPanel
             // 
             toolsFlowLayoutPanel.AutoSize = true;
-            toolsFlowLayoutPanel.Controls.Add(filterTextBox);
-            toolsFlowLayoutPanel.Controls.Add(filterAllCheckBox);
             toolsFlowLayoutPanel.Controls.Add(renameButton);
             toolsFlowLayoutPanel.Controls.Add(deleteButton);
             toolsFlowLayoutPanel.Controls.Add(settingsButton);
+            toolsFlowLayoutPanel.Controls.Add(filterAllCheckBox);
+            toolsFlowLayoutPanel.Controls.Add(filterTextBox);
             toolsFlowLayoutPanel.Location = new Point(4, 4);
             toolsFlowLayoutPanel.Margin = new Padding(4);
             toolsFlowLayoutPanel.Name = "toolsFlowLayoutPanel";
@@ -133,7 +133,7 @@
             // filterTextBox
             // 
             filterTextBox.Anchor = AnchorStyles.Left;
-            filterTextBox.Location = new Point(4, 5);
+            filterTextBox.Location = new Point(355, 5);
             filterTextBox.Margin = new Padding(4);
             filterTextBox.Name = "filterTextBox";
             filterTextBox.Size = new Size(353, 29);
@@ -147,7 +147,7 @@
             filterAllCheckBox.AutoSize = true;
             filterAllCheckBox.Checked = true;
             filterAllCheckBox.CheckState = CheckState.Checked;
-            filterAllCheckBox.Location = new Point(364, 7);
+            filterAllCheckBox.Location = new Point(259, 7);
             filterAllCheckBox.Name = "filterAllCheckBox";
             filterAllCheckBox.Size = new Size(89, 25);
             filterAllCheckBox.TabIndex = 6;
@@ -160,7 +160,7 @@
             renameButton.Anchor = AnchorStyles.Left;
             renameButton.AutoSize = true;
             renameButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            renameButton.Location = new Point(460, 4);
+            renameButton.Location = new Point(4, 4);
             renameButton.Margin = new Padding(4);
             renameButton.Name = "renameButton";
             renameButton.Size = new Size(82, 31);
@@ -174,7 +174,7 @@
             deleteButton.Anchor = AnchorStyles.Left;
             deleteButton.AutoSize = true;
             deleteButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            deleteButton.Location = new Point(550, 4);
+            deleteButton.Location = new Point(94, 4);
             deleteButton.Margin = new Padding(4);
             deleteButton.Name = "deleteButton";
             deleteButton.Size = new Size(69, 31);
@@ -188,7 +188,7 @@
             settingsButton.Anchor = AnchorStyles.Left;
             settingsButton.AutoSize = true;
             settingsButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            settingsButton.Location = new Point(627, 4);
+            settingsButton.Location = new Point(171, 4);
             settingsButton.Margin = new Padding(4);
             settingsButton.Name = "settingsButton";
             settingsButton.Size = new Size(81, 31);
