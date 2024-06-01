@@ -42,55 +42,93 @@ public partial class MainForm : Form
     }
 
     private string _selectedPathAfterRefresh = "";
-    private readonly HashSet<string> _expandedPaths = [];
-    private bool _isExpandingAll;
+    private string _selectedPathBeforeFilter = "";
 
+    /// <summary>
+    ///     There are 3 modes of refreshing the tree:
+    ///     - No filter: filter text is empty, show selected file/folder and collapse all the other nodes.
+    ///     - Filter all: search filter text in all file names and expand all nodes.
+    ///     - Filter current: search filter text in the same folder of selected file/folder, and collapse all the other nodes.
+    /// </summary>
     private void RefreshTree()
     {
         var selectedPathPassed = false;
         TreeNode? selectedNode = null;
 
-        // Only save expanded paths when no filter => filtered
-        if (!_isExpandingAll)
-        {
-            _expandedPaths.Clear();
-            SaveExpandedPaths(noteTreeView.Nodes, _expandedPaths);
-        }
+        // Only save expanded paths when no filter => has filter
+        var hasFilter = filterTextBox.Text != "";
+        var filterAll = filterAllCheckBox.Checked;
+        var expandingAll = hasFilter && filterAll;
 
         noteTreeView.BeginUpdate();
 
         try
         {
-            // _selectedPathAfterRefresh can be specified to select a nearest node after refresh.
+            // Save selected path before filter, which will be used in filter current mode
+            if (filterTextBox.Text.Length == 1 && _selectedPathBeforeFilter == "")
+                _selectedPathBeforeFilter = noteTreeView.SelectedNode?.GetDocument().FullPath ?? "";
+            else if (filterTextBox.Text.Length == 0)
+                _selectedPathBeforeFilter = "";
+
+            // _selectedPathAfterRefresh can be specified to select the nearest node after refresh.
             // If it's not specified, use the current selected node.
             if (_selectedPathAfterRefresh == "" && noteTreeView.SelectedNode != null)
                 _selectedPathAfterRefresh = noteTreeView.SelectedNode.GetDocument().FullPath;
 
             noteTreeView.Nodes.Clear();
-            AddFolderToNode(RootFolder.Root, noteTreeView.Nodes);
+            // No filter or filter all
+            if (!hasFilter || filterAll)
+                AddFolderToNode(RootFolder.Root, noteTreeView.Nodes, true);
+            else // filter current
+                FilterCurrentFolder();
         }
         finally
         {
-            _isExpandingAll = filterTextBox.Text != "";
-            if (_isExpandingAll)
+            if (expandingAll)
                 noteTreeView.ExpandAll();
-            else // filtered => no filter
-                RestoreExpandedPaths(noteTreeView.Nodes, _expandedPaths);
 
             noteTreeView.EndUpdate();
 
-            // The nearest node to select after refresh
-            if (selectedNode != null)
+            // Select node after refresh
+            if (selectedNode == null)
             {
-                noteTreeView.SelectedNode = selectedNode;
-                noteTreeView.SelectedNode.EnsureVisible();
+                // get last visible node of noteTreeView
+            }
+            else
+            {
+                if (expandingAll)
+                {
+                    noteTreeView.SelectedNode = selectedNode;
+                }
+                else
+                {
+                    // Select the nearest node after refresh
+                    var nextNode = selectedNode;
+                    while (nextNode != null && !nextNode.GetDocument().MatchFilter(_filters))
+                        nextNode = nextNode.NextVisibleNode;
+
+                    if (nextNode != null)
+                    {
+                        noteTreeView.SelectedNode = nextNode;
+                    }
+                    else
+                    {
+                        var prevNode = selectedNode;
+                        while (prevNode != null && (!prevNode.IsInExpandedNode() || !prevNode.GetDocument().MatchFilter(_filters)))
+                            prevNode = prevNode.PrevNode;
+                        if (prevNode != null)
+                            noteTreeView.SelectedNode = prevNode;
+                    }
+                }
+
+                noteTreeView.SelectedNode?.EnsureVisible();
                 _selectedPathAfterRefresh = "";
             }
         }
 
         return;
 
-        bool AddFolderToNode(Folder folder, TreeNodeCollection nodes)
+        bool AddFolderToNode(Folder folder, TreeNodeCollection nodes, bool recursive)
         {
             var hasAddedNode = false;
 
@@ -108,12 +146,12 @@ public partial class MainForm : Form
                     subNode.SetDocument(doc);
                     shouldAdd = true;
 
-                    // Select next visible node if current selected node is not visible
+                    // Select next node if current selected node doesn't match the filter
                     if (selectedPathPassed && selectedNode == null)
                         selectedNode = subNode;
                 }
 
-                if (doc.IsFolder)
+                if (doc.IsFolder && recursive)
                 {
                     if (subNode == null)
                     {
@@ -121,7 +159,7 @@ public partial class MainForm : Form
                         subNode.SetDocument(doc);
                     }
 
-                    if (AddFolderToNode(doc.ToFolder(), subNode.Nodes))
+                    if (AddFolderToNode(doc.ToFolder(), subNode.Nodes, true))
                         shouldAdd = true;
                 }
 
@@ -135,26 +173,53 @@ public partial class MainForm : Form
             return hasAddedNode;
         }
 
-        void SaveExpandedPaths(TreeNodeCollection nodes, HashSet<string> paths)
+        void FilterCurrentFolder()
         {
-            foreach (TreeNode node in nodes)
+            var doc = RootFolder.FindPath(_selectedPathBeforeFilter);
+            if (doc == null)
             {
-                if (node.IsExpanded)
-                    paths.Add(node.GetDocument().FullPath);
-                if (node.Nodes.Count > 0)
-                    SaveExpandedPaths(node.Nodes, paths);
-            }
-        }
+                if (RootFolder.Root.SubFolders.Count > 0)
+                    doc = RootFolder.Root.SubFolders[0];
+                else if (RootFolder.Root.Files.Count > 0)
+                    doc = RootFolder.Root.Files[0];
+                else
+                    return;
 
-        void RestoreExpandedPaths(TreeNodeCollection nodes, HashSet<string> paths)
-        {
-            foreach (TreeNode node in nodes)
+                _selectedPathBeforeFilter = doc.FullPath;
+            }
+
+            var parentFolders = new List<Folder>();
+            var parent = doc.Parent;
+            while (parent != null && parent != RootFolder.Root)
             {
-                if (node.Nodes.Count == 0)
-                    continue;
-                if (paths.Contains(node.GetDocument().FullPath))
-                    node.Expand();
-                RestoreExpandedPaths(node.Nodes, paths);
+                parentFolders.Add(parent);
+                parent = parent.Parent;
+            }
+
+            parentFolders.Reverse();
+
+            var nodes = noteTreeView.Nodes;
+            TreeNode parentNode = null;
+            foreach (var parentFolder in parentFolders)
+            {
+                var treeNode = new TreeNode();
+                treeNode.SetDocument(parentFolder);
+                nodes.Add(treeNode);
+
+                parentNode = treeNode;
+                nodes = treeNode.Nodes;
+            }
+
+            AddFolderToNode(doc.Parent!, nodes, false);
+
+            noteTreeView.ExpandAll();
+
+            if (selectedNode == null)
+            {
+                if (nodes.Count > 0)
+                    selectedNode = nodes[^1];
+                else if (parentNode != null)
+                    selectedNode = parentNode;
             }
         }
     }
@@ -186,12 +251,18 @@ public partial class MainForm : Form
         if (!noteTreeView.SelectedNode.IsFolder())
             return false;
 
+        _selectedPathAfterRefresh = noteTreeView.SelectedNode.GetDocument().FullPath;
+
         filterTextBox.Text = "";
         if (noteTreeView.SelectedNode == null)
             return true;
 
         noteTreeView.SelectedNode.EnsureVisible();
         noteTreeView.SelectedNode.Expand();
+
+        // Select the first node after expanding. Filter current mode requires this.
+        if (noteTreeView.SelectedNode.Nodes.Count > 0)
+            noteTreeView.SelectedNode = noteTreeView.SelectedNode.Nodes[0];
 
         return true;
     }
@@ -283,6 +354,12 @@ public partial class MainForm : Form
                 settingsButton_Click(sender, e);
                 e.Handled = true;
                 break;
+
+            // Alt+F to switch filter mode
+            case { KeyCode: Keys.F, Control: false, Alt: true, Shift: false }:
+                filterAllCheckBox.Checked = !filterAllCheckBox.Checked;
+                e.Handled = true;
+                break;
         }
     }
 
@@ -292,16 +369,6 @@ public partial class MainForm : Form
         if (!OpenFileNode())
             // Expand folder
             OpenFolderNode();
-    }
-
-    private void CreateNewFile()
-    {
-        CreateNewFileOrDirectory(true);
-    }
-
-    private void CreateNewDirectory()
-    {
-        CreateNewFileOrDirectory(false);
     }
 
     private bool _isCreating;
@@ -412,7 +479,7 @@ public partial class MainForm : Form
         e.Handled = true;
     }
 
-    private List<Regex> _filters = new();
+    private List<Regex> _filters = [];
 
     // Filter tree nodes
     private void filterTextBox_TextChanged(object sender, EventArgs e)
@@ -512,12 +579,12 @@ public partial class MainForm : Form
 
     private void newFileToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        CreateNewFile();
+        CreateNewFileOrDirectory(true);
     }
 
     private void newfolderToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        CreateNewDirectory();
+        CreateNewFileOrDirectory(false);
     }
 
     private void renameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -544,5 +611,11 @@ public partial class MainForm : Form
     private void deleteButton_Click(object sender, EventArgs e)
     {
         DeleteSelectedNode();
+    }
+
+    private void filterAllCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        if (filterTextBox.Text != "")
+            RefreshTree();
     }
 }

@@ -39,13 +39,14 @@
             deleteToolStripMenuItem = new ToolStripMenuItem();
             toolsFlowLayoutPanel = new FlowLayoutPanel();
             filterTextBox = new TextBox();
+            filterAllCheckBox = new CheckBox();
             renameButton = new Button();
+            deleteButton = new Button();
             settingsButton = new Button();
             tableLayoutPanel1 = new TableLayoutPanel();
             notifyIcon = new NotifyIcon(components);
             notifyIconContextMenuStrip = new ContextMenuStrip(components);
             exitToolStripMenuItem = new ToolStripMenuItem();
-            deleteButton = new Button();
             noteTreeViewContextMenuStrip.SuspendLayout();
             toolsFlowLayoutPanel.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -57,10 +58,10 @@
             noteTreeView.ContextMenuStrip = noteTreeViewContextMenuStrip;
             noteTreeView.Dock = DockStyle.Fill;
             noteTreeView.LabelEdit = true;
-            noteTreeView.Location = new Point(4, 92);
+            noteTreeView.Location = new Point(4, 51);
             noteTreeView.Margin = new Padding(4);
             noteTreeView.Name = "noteTreeView";
-            noteTreeView.Size = new Size(1121, 590);
+            noteTreeView.Size = new Size(1121, 631);
             noteTreeView.TabIndex = 0;
             noteTreeView.AfterLabelEdit += noteTreeView_AfterLabelEdit;
             noteTreeView.NodeMouseClick += noteTreeView_NodeMouseClick;
@@ -74,12 +75,12 @@
             noteTreeViewContextMenuStrip.ImageScalingSize = new Size(24, 24);
             noteTreeViewContextMenuStrip.Items.AddRange(new ToolStripItem[] { openToolStripMenuItem, newFileToolStripMenuItem, newFolderToolStripMenuItem, renameToolStripMenuItem, deleteToolStripMenuItem });
             noteTreeViewContextMenuStrip.Name = "notifyIconContextMenuStrip";
-            noteTreeViewContextMenuStrip.Size = new Size(215, 164);
+            noteTreeViewContextMenuStrip.Size = new Size(163, 114);
             // 
             // openToolStripMenuItem
             // 
             openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new Size(214, 32);
+            openToolStripMenuItem.Size = new Size(162, 22);
             openToolStripMenuItem.Text = "&Open";
             openToolStripMenuItem.Click += openToolStripMenuItem_Click;
             // 
@@ -87,7 +88,7 @@
             // 
             newFileToolStripMenuItem.Name = "newFileToolStripMenuItem";
             newFileToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            newFileToolStripMenuItem.Size = new Size(214, 32);
+            newFileToolStripMenuItem.Size = new Size(162, 22);
             newFileToolStripMenuItem.Text = "&New File";
             newFileToolStripMenuItem.Click += newFileToolStripMenuItem_Click;
             // 
@@ -95,7 +96,7 @@
             // 
             newFolderToolStripMenuItem.Name = "newFolderToolStripMenuItem";
             newFolderToolStripMenuItem.ShortcutKeys = Keys.F7;
-            newFolderToolStripMenuItem.Size = new Size(214, 32);
+            newFolderToolStripMenuItem.Size = new Size(162, 22);
             newFolderToolStripMenuItem.Text = "New &Folder";
             newFolderToolStripMenuItem.Click += newfolderToolStripMenuItem_Click;
             // 
@@ -103,7 +104,7 @@
             // 
             renameToolStripMenuItem.Name = "renameToolStripMenuItem";
             renameToolStripMenuItem.ShortcutKeys = Keys.F2;
-            renameToolStripMenuItem.Size = new Size(214, 32);
+            renameToolStripMenuItem.Size = new Size(162, 22);
             renameToolStripMenuItem.Text = "&Rename";
             renameToolStripMenuItem.Click += renameToolStripMenuItem_Click;
             // 
@@ -111,7 +112,7 @@
             // 
             deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             deleteToolStripMenuItem.ShortcutKeys = Keys.Delete;
-            deleteToolStripMenuItem.Size = new Size(214, 32);
+            deleteToolStripMenuItem.Size = new Size(162, 22);
             deleteToolStripMenuItem.Text = "&Delete";
             deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
             // 
@@ -119,51 +120,80 @@
             // 
             toolsFlowLayoutPanel.AutoSize = true;
             toolsFlowLayoutPanel.Controls.Add(filterTextBox);
+            toolsFlowLayoutPanel.Controls.Add(filterAllCheckBox);
             toolsFlowLayoutPanel.Controls.Add(renameButton);
             toolsFlowLayoutPanel.Controls.Add(deleteButton);
             toolsFlowLayoutPanel.Controls.Add(settingsButton);
             toolsFlowLayoutPanel.Location = new Point(4, 4);
             toolsFlowLayoutPanel.Margin = new Padding(4);
             toolsFlowLayoutPanel.Name = "toolsFlowLayoutPanel";
-            toolsFlowLayoutPanel.Size = new Size(748, 80);
+            toolsFlowLayoutPanel.Size = new Size(712, 39);
             toolsFlowLayoutPanel.TabIndex = 3;
             // 
             // filterTextBox
             // 
             filterTextBox.Anchor = AnchorStyles.Left;
-            filterTextBox.Location = new Point(4, 20);
+            filterTextBox.Location = new Point(4, 5);
             filterTextBox.Margin = new Padding(4);
             filterTextBox.Name = "filterTextBox";
-            filterTextBox.Size = new Size(353, 39);
+            filterTextBox.Size = new Size(353, 29);
             filterTextBox.TabIndex = 2;
             filterTextBox.Visible = false;
             filterTextBox.TextChanged += filterTextBox_TextChanged;
+            // 
+            // filterAllCheckBox
+            // 
+            filterAllCheckBox.Anchor = AnchorStyles.Left;
+            filterAllCheckBox.AutoSize = true;
+            filterAllCheckBox.Checked = true;
+            filterAllCheckBox.CheckState = CheckState.Checked;
+            filterAllCheckBox.Location = new Point(364, 7);
+            filterAllCheckBox.Name = "filterAllCheckBox";
+            filterAllCheckBox.Size = new Size(89, 25);
+            filterAllCheckBox.TabIndex = 6;
+            filterAllCheckBox.Text = "&Filter all";
+            filterAllCheckBox.UseVisualStyleBackColor = true;
+            filterAllCheckBox.CheckedChanged += filterAllCheckBox_CheckedChanged;
             // 
             // renameButton
             // 
             renameButton.Anchor = AnchorStyles.Left;
             renameButton.AutoSize = true;
             renameButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            renameButton.Location = new Point(365, 4);
+            renameButton.Location = new Point(460, 4);
             renameButton.Margin = new Padding(4);
             renameButton.Name = "renameButton";
-            renameButton.Size = new Size(118, 72);
+            renameButton.Size = new Size(82, 31);
             renameButton.TabIndex = 4;
-            renameButton.Text = "Rename\r\nF2";
+            renameButton.Text = "&Rename";
             renameButton.UseVisualStyleBackColor = true;
             renameButton.Click += renameButton_Click;
+            // 
+            // deleteButton
+            // 
+            deleteButton.Anchor = AnchorStyles.Left;
+            deleteButton.AutoSize = true;
+            deleteButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            deleteButton.Location = new Point(550, 4);
+            deleteButton.Margin = new Padding(4);
+            deleteButton.Name = "deleteButton";
+            deleteButton.Size = new Size(69, 31);
+            deleteButton.TabIndex = 5;
+            deleteButton.Text = "&Delete";
+            deleteButton.UseVisualStyleBackColor = true;
+            deleteButton.Click += deleteButton_Click;
             // 
             // settingsButton
             // 
             settingsButton.Anchor = AnchorStyles.Left;
             settingsButton.AutoSize = true;
             settingsButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            settingsButton.Location = new Point(598, 4);
+            settingsButton.Location = new Point(627, 4);
             settingsButton.Margin = new Padding(4);
             settingsButton.Name = "settingsButton";
-            settingsButton.Size = new Size(146, 72);
+            settingsButton.Size = new Size(81, 31);
             settingsButton.TabIndex = 3;
-            settingsButton.Text = "Settings\r\nCtrl+Alt+S";
+            settingsButton.Text = "&Settings";
             settingsButton.UseVisualStyleBackColor = true;
             settingsButton.Click += settingsButton_Click;
             // 
@@ -197,32 +227,18 @@
             notifyIconContextMenuStrip.ImageScalingSize = new Size(24, 24);
             notifyIconContextMenuStrip.Items.AddRange(new ToolStripItem[] { exitToolStripMenuItem });
             notifyIconContextMenuStrip.Name = "notifyIconContextMenuStrip";
-            notifyIconContextMenuStrip.Size = new Size(112, 36);
+            notifyIconContextMenuStrip.Size = new Size(94, 26);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(111, 32);
+            exitToolStripMenuItem.Size = new Size(93, 22);
             exitToolStripMenuItem.Text = "E&xit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
-            // deleteButton
-            // 
-            deleteButton.Anchor = AnchorStyles.Left;
-            deleteButton.AutoSize = true;
-            deleteButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            deleteButton.Location = new Point(491, 4);
-            deleteButton.Margin = new Padding(4);
-            deleteButton.Name = "deleteButton";
-            deleteButton.Size = new Size(99, 72);
-            deleteButton.TabIndex = 5;
-            deleteButton.Text = "Delete\r\nDel";
-            deleteButton.UseVisualStyleBackColor = true;
-            deleteButton.Click += deleteButton_Click;
-            // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(14F, 31F);
+            AutoScaleDimensions = new SizeF(10F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1163, 715);
             Controls.Add(tableLayoutPanel1);
@@ -262,5 +278,6 @@
         private ToolStripMenuItem openToolStripMenuItem;
         private Button renameButton;
         private Button deleteButton;
+        private CheckBox filterAllCheckBox;
     }
 }

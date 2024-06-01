@@ -176,8 +176,11 @@ static class RootFolder
         }
     }
 
-    private static Document? FindPath(string fullPath)
+    public static Document? FindPath(string fullPath)
     {
+        if (fullPath == "")
+            return null;
+
         var relativePath = Path.GetRelativePath(Root.FullPath, fullPath);
         if (relativePath == ".")
             return Root;
