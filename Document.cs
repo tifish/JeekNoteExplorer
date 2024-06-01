@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
-using System.Text.RegularExpressions;
 using Microsoft.VisualBasic.FileIO;
+using NPinyin;
 
 namespace JeekNoteExplorer;
 
@@ -47,12 +47,16 @@ class Document
         return (Folder)this;
     }
 
-    public bool MatchFilter(List<Regex> filters)
+    public bool MatchFilter(List<string> filters)
     {
         if (filters.Count == 0)
             return true;
 
-        return filters.All(filter => filter.IsMatch(Name));
+        if (filters.All(filter => Name.Contains(filter, StringComparison.InvariantCultureIgnoreCase)))
+            return true;
+
+        var pinyinName = Pinyin.GetInitials(Name);
+        return filters.All(filter => pinyinName.Contains(filter, StringComparison.InvariantCultureIgnoreCase));
     }
 
     public void Delete()

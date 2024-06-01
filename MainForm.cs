@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Text.RegularExpressions;
 using BlueMystic;
 using NHotkey;
 using NHotkey.WindowsForms;
@@ -47,7 +46,7 @@ public partial class MainForm : Form
     /// <summary>
     ///     There are 3 modes of refreshing the tree:
     ///     - No filter: filter text is empty, show selected file/folder and collapse all the other nodes.
-    ///     - Filter all: search filter text in all file names and expand all nodes.
+    ///     - Filter all: search filter text in all files and expand all nodes.
     ///     - Filter current: search filter text in the same folder of selected file/folder, and collapse all the other nodes.
     /// </summary>
     private void RefreshTree()
@@ -479,7 +478,7 @@ public partial class MainForm : Form
         e.Handled = true;
     }
 
-    private List<Regex> _filters = [];
+    private List<string> _filters = [];
 
     // Filter tree nodes
     private void filterTextBox_TextChanged(object sender, EventArgs e)
@@ -488,10 +487,7 @@ public partial class MainForm : Form
         if (filterText == "")
             _filters.Clear();
         else
-            _filters = filterText.Split(' ')
-                .Where(filter => filter != "")
-                .Select(filter => new Regex(filter, RegexOptions.IgnoreCase))
-                .ToList();
+            _filters = filterText.Split(' ').ToList();
 
         RefreshTree();
 
