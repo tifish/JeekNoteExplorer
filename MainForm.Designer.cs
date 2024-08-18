@@ -38,11 +38,11 @@
             renameToolStripMenuItem = new ToolStripMenuItem();
             deleteToolStripMenuItem = new ToolStripMenuItem();
             toolsFlowLayoutPanel = new FlowLayoutPanel();
-            filterTextBox = new TextBox();
-            filterAllCheckBox = new CheckBox();
             renameButton = new Button();
             deleteButton = new Button();
             settingsButton = new Button();
+            filterAllCheckBox = new CheckBox();
+            filterTextBox = new TextBox();
             tableLayoutPanel1 = new TableLayoutPanel();
             notifyIcon = new NotifyIcon(components);
             notifyIconContextMenuStrip = new ContextMenuStrip(components);
@@ -75,12 +75,12 @@
             noteTreeViewContextMenuStrip.ImageScalingSize = new Size(24, 24);
             noteTreeViewContextMenuStrip.Items.AddRange(new ToolStripItem[] { openToolStripMenuItem, newFileToolStripMenuItem, newFolderToolStripMenuItem, renameToolStripMenuItem, deleteToolStripMenuItem });
             noteTreeViewContextMenuStrip.Name = "notifyIconContextMenuStrip";
-            noteTreeViewContextMenuStrip.Size = new Size(163, 114);
+            noteTreeViewContextMenuStrip.Size = new Size(181, 136);
             // 
             // openToolStripMenuItem
             // 
             openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new Size(162, 22);
+            openToolStripMenuItem.Size = new Size(180, 22);
             openToolStripMenuItem.Text = "&Open";
             openToolStripMenuItem.Click += openToolStripMenuItem_Click;
             // 
@@ -88,7 +88,7 @@
             // 
             newFileToolStripMenuItem.Name = "newFileToolStripMenuItem";
             newFileToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            newFileToolStripMenuItem.Size = new Size(162, 22);
+            newFileToolStripMenuItem.Size = new Size(180, 22);
             newFileToolStripMenuItem.Text = "&New File";
             newFileToolStripMenuItem.Click += newFileToolStripMenuItem_Click;
             // 
@@ -96,7 +96,7 @@
             // 
             newFolderToolStripMenuItem.Name = "newFolderToolStripMenuItem";
             newFolderToolStripMenuItem.ShortcutKeys = Keys.F7;
-            newFolderToolStripMenuItem.Size = new Size(162, 22);
+            newFolderToolStripMenuItem.Size = new Size(180, 22);
             newFolderToolStripMenuItem.Text = "New &Folder";
             newFolderToolStripMenuItem.Click += newfolderToolStripMenuItem_Click;
             // 
@@ -104,15 +104,14 @@
             // 
             renameToolStripMenuItem.Name = "renameToolStripMenuItem";
             renameToolStripMenuItem.ShortcutKeys = Keys.F2;
-            renameToolStripMenuItem.Size = new Size(162, 22);
+            renameToolStripMenuItem.Size = new Size(180, 22);
             renameToolStripMenuItem.Text = "&Rename";
             renameToolStripMenuItem.Click += renameToolStripMenuItem_Click;
             // 
             // deleteToolStripMenuItem
             // 
             deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            deleteToolStripMenuItem.ShortcutKeys = Keys.Delete;
-            deleteToolStripMenuItem.Size = new Size(162, 22);
+            deleteToolStripMenuItem.Size = new Size(180, 22);
             deleteToolStripMenuItem.Text = "&Delete";
             deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
             // 
@@ -129,31 +128,6 @@
             toolsFlowLayoutPanel.Name = "toolsFlowLayoutPanel";
             toolsFlowLayoutPanel.Size = new Size(712, 39);
             toolsFlowLayoutPanel.TabIndex = 3;
-            // 
-            // filterTextBox
-            // 
-            filterTextBox.Anchor = AnchorStyles.Left;
-            filterTextBox.Location = new Point(355, 5);
-            filterTextBox.Margin = new Padding(4);
-            filterTextBox.Name = "filterTextBox";
-            filterTextBox.Size = new Size(353, 29);
-            filterTextBox.TabIndex = 2;
-            filterTextBox.Visible = false;
-            filterTextBox.TextChanged += filterTextBox_TextChanged;
-            // 
-            // filterAllCheckBox
-            // 
-            filterAllCheckBox.Anchor = AnchorStyles.Left;
-            filterAllCheckBox.AutoSize = true;
-            filterAllCheckBox.Checked = true;
-            filterAllCheckBox.CheckState = CheckState.Checked;
-            filterAllCheckBox.Location = new Point(259, 7);
-            filterAllCheckBox.Name = "filterAllCheckBox";
-            filterAllCheckBox.Size = new Size(89, 25);
-            filterAllCheckBox.TabIndex = 6;
-            filterAllCheckBox.Text = "&Filter all";
-            filterAllCheckBox.UseVisualStyleBackColor = true;
-            filterAllCheckBox.CheckedChanged += filterAllCheckBox_CheckedChanged;
             // 
             // renameButton
             // 
@@ -197,6 +171,31 @@
             settingsButton.UseVisualStyleBackColor = true;
             settingsButton.Click += settingsButton_Click;
             // 
+            // filterAllCheckBox
+            // 
+            filterAllCheckBox.Anchor = AnchorStyles.Left;
+            filterAllCheckBox.AutoSize = true;
+            filterAllCheckBox.Checked = true;
+            filterAllCheckBox.CheckState = CheckState.Checked;
+            filterAllCheckBox.Location = new Point(259, 7);
+            filterAllCheckBox.Name = "filterAllCheckBox";
+            filterAllCheckBox.Size = new Size(89, 25);
+            filterAllCheckBox.TabIndex = 6;
+            filterAllCheckBox.Text = "&Filter all";
+            filterAllCheckBox.UseVisualStyleBackColor = true;
+            filterAllCheckBox.CheckedChanged += filterAllCheckBox_CheckedChanged;
+            // 
+            // filterTextBox
+            // 
+            filterTextBox.Anchor = AnchorStyles.Left;
+            filterTextBox.Location = new Point(355, 5);
+            filterTextBox.Margin = new Padding(4);
+            filterTextBox.Name = "filterTextBox";
+            filterTextBox.Size = new Size(353, 29);
+            filterTextBox.TabIndex = 2;
+            filterTextBox.Visible = false;
+            filterTextBox.TextChanged += filterTextBox_TextChanged;
+            // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -227,12 +226,12 @@
             notifyIconContextMenuStrip.ImageScalingSize = new Size(24, 24);
             notifyIconContextMenuStrip.Items.AddRange(new ToolStripItem[] { exitToolStripMenuItem });
             notifyIconContextMenuStrip.Name = "notifyIconContextMenuStrip";
-            notifyIconContextMenuStrip.Size = new Size(94, 26);
+            notifyIconContextMenuStrip.Size = new Size(97, 26);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(93, 22);
+            exitToolStripMenuItem.Size = new Size(96, 22);
             exitToolStripMenuItem.Text = "E&xit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 

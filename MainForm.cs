@@ -359,6 +359,14 @@ public partial class MainForm : Form
                 filterAllCheckBox.Checked = !filterAllCheckBox.Checked;
                 e.Handled = true;
                 break;
+
+            // Delete to delete the selected node
+            case { KeyCode: Keys.Delete, Control: false, Alt: false, Shift: false }:
+                if (noteTreeView.SelectedNode?.IsEditing != false)
+                    break;
+                DeleteSelectedNode();
+                e.Handled = true;
+                break;
         }
     }
 
@@ -386,6 +394,7 @@ public partial class MainForm : Form
         var newNode = new TreeNode();
         parentNodes.Add(newNode);
         selectedNode.Expand();
+        noteTreeView.SelectedNode = newNode;
 
         _isCreating = true;
         noteTreeView.AfterLabelEdit += OnNoteTreeViewOnAfterLabelEdit;
@@ -455,6 +464,8 @@ public partial class MainForm : Form
     private void DeleteSelectedNode()
     {
         if (noteTreeView.SelectedNode == null)
+            return;
+        if (noteTreeView.SelectedNode.IsEditing)
             return;
 
         var nextSelectedNode = noteTreeView.SelectedNode.NextVisibleNode ?? noteTreeView.SelectedNode.PrevVisibleNode;
