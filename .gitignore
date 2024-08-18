@@ -398,6 +398,7 @@ FodyWeavers.xsd
 
 /.idea
 /Bin/Logs
+/Bin/Libs
 /Bin/*.exe
 /Bin/*.dll
 /Bin/*.json
