@@ -168,4 +168,19 @@ class Document
             return false;
         }
     }
+
+    public void CopyToClipboard()
+    {
+        ShellFile.Copy(FullPath);
+    }
+
+    public void CutToClipboard()
+    {
+        ShellFile.Cut(FullPath);
+    }
+
+    public void PasteFromClipboard()
+    {
+        ShellFile.Paste(IsFolder ? FullPath : Parent!.FullPath);
+    }
 }

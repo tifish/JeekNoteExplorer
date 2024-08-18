@@ -47,6 +47,9 @@
             notifyIcon = new NotifyIcon(components);
             notifyIconContextMenuStrip = new ContextMenuStrip(components);
             exitToolStripMenuItem = new ToolStripMenuItem();
+            copyToolStripMenuItem = new ToolStripMenuItem();
+            cutToolStripMenuItem = new ToolStripMenuItem();
+            pasteToolStripMenuItem = new ToolStripMenuItem();
             noteTreeViewContextMenuStrip.SuspendLayout();
             toolsFlowLayoutPanel.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -73,9 +76,9 @@
             // noteTreeViewContextMenuStrip
             // 
             noteTreeViewContextMenuStrip.ImageScalingSize = new Size(24, 24);
-            noteTreeViewContextMenuStrip.Items.AddRange(new ToolStripItem[] { openToolStripMenuItem, newFileToolStripMenuItem, newFolderToolStripMenuItem, renameToolStripMenuItem, deleteToolStripMenuItem });
+            noteTreeViewContextMenuStrip.Items.AddRange(new ToolStripItem[] { openToolStripMenuItem, newFileToolStripMenuItem, newFolderToolStripMenuItem, renameToolStripMenuItem, deleteToolStripMenuItem, copyToolStripMenuItem, cutToolStripMenuItem, pasteToolStripMenuItem });
             noteTreeViewContextMenuStrip.Name = "notifyIconContextMenuStrip";
-            noteTreeViewContextMenuStrip.Size = new Size(181, 136);
+            noteTreeViewContextMenuStrip.Size = new Size(181, 202);
             // 
             // openToolStripMenuItem
             // 
@@ -226,14 +229,38 @@
             notifyIconContextMenuStrip.ImageScalingSize = new Size(24, 24);
             notifyIconContextMenuStrip.Items.AddRange(new ToolStripItem[] { exitToolStripMenuItem });
             notifyIconContextMenuStrip.Name = "notifyIconContextMenuStrip";
-            notifyIconContextMenuStrip.Size = new Size(97, 26);
+            notifyIconContextMenuStrip.Size = new Size(94, 26);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(96, 22);
+            exitToolStripMenuItem.Size = new Size(93, 22);
             exitToolStripMenuItem.Text = "E&xit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
+            // 
+            // copyToolStripMenuItem
+            // 
+            copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            copyToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.C;
+            copyToolStripMenuItem.Size = new Size(180, 22);
+            copyToolStripMenuItem.Text = "Copy";
+            copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
+            // 
+            // cutToolStripMenuItem
+            // 
+            cutToolStripMenuItem.Name = "cutToolStripMenuItem";
+            cutToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.X;
+            cutToolStripMenuItem.Size = new Size(180, 22);
+            cutToolStripMenuItem.Text = "Cut";
+            cutToolStripMenuItem.Click += cutToolStripMenuItem_Click;
+            // 
+            // pasteToolStripMenuItem
+            // 
+            pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+            pasteToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.V;
+            pasteToolStripMenuItem.Size = new Size(180, 22);
+            pasteToolStripMenuItem.Text = "Paste";
+            pasteToolStripMenuItem.Click += pasteToolStripMenuItem_Click;
             // 
             // MainForm
             // 
@@ -278,5 +305,8 @@
         private Button renameButton;
         private Button deleteButton;
         private CheckBox filterAllCheckBox;
+        private ToolStripMenuItem copyToolStripMenuItem;
+        private ToolStripMenuItem cutToolStripMenuItem;
+        private ToolStripMenuItem pasteToolStripMenuItem;
     }
 }

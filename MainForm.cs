@@ -362,10 +362,28 @@ public partial class MainForm : Form
 
             // Delete to delete the selected node
             case { KeyCode: Keys.Delete, Control: false, Alt: false, Shift: false }:
-                if (noteTreeView.SelectedNode?.IsEditing != false)
+                if (noteTreeView.SelectedNode == null)
                     break;
+                if (noteTreeView.SelectedNode.IsEditing)
+                    break;
+
                 DeleteSelectedNode();
                 e.Handled = true;
+                break;
+
+            // Ctrl+C to copy the selected file or folder
+            case { KeyCode: Keys.C, Control: true, Alt: false, Shift: false }:
+                e.Handled = CopySelectedNode();
+                break;
+
+            // Ctrl+X to cut the selected file or folder
+            case { KeyCode: Keys.X, Control: true, Alt: false, Shift: false }:
+                e.Handled = CutSelectedNode();
+                break;
+
+            // Ctrl+V to paste the copied file or folder
+            case { KeyCode: Keys.V, Control: true, Alt: false, Shift: false }:
+                e.Handled = PasteSelectedNode();
                 break;
         }
     }
@@ -472,6 +490,39 @@ public partial class MainForm : Form
         _selectedPathAfterRefresh = nextSelectedNode?.GetDocument().FullPath ?? "";
 
         noteTreeView.SelectedNode.GetDocument().DeleteInFileSystem();
+    }
+
+    private bool CopySelectedNode()
+    {
+        if (noteTreeView.SelectedNode == null)
+            return false;
+        if (noteTreeView.SelectedNode.IsEditing)
+            return false;
+
+        noteTreeView.SelectedNode.GetDocument().CopyToClipboard();
+        return true;
+    }
+
+    private bool CutSelectedNode()
+    {
+        if (noteTreeView.SelectedNode == null)
+            return false;
+        if (noteTreeView.SelectedNode.IsEditing)
+            return false;
+
+        noteTreeView.SelectedNode.GetDocument().CutToClipboard();
+        return true;
+    }
+
+    private bool PasteSelectedNode()
+    {
+        if (noteTreeView.SelectedNode == null)
+            return false;
+        if (noteTreeView.SelectedNode.IsEditing)
+            return false;
+
+        noteTreeView.SelectedNode.GetDocument().PasteFromClipboard();
+        return true;
     }
 
     // Type to filter
@@ -624,5 +675,20 @@ public partial class MainForm : Form
     {
         if (filterTextBox.Text != "")
             RefreshTree();
+    }
+
+    private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        CopySelectedNode();
+    }
+
+    private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        CutSelectedNode();
+    }
+
+    private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        PasteSelectedNode();
     }
 }

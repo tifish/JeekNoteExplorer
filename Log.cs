@@ -27,7 +27,7 @@ public static class LogSingletonContainer
                 );
 
             if (Debugger.IsAttached)
-                loggerConfig.WriteTo.Console(LogEventLevel.Verbose);
+                loggerConfig.WriteTo.Console();
 
             _log = loggerConfig.CreateLogger();
 
