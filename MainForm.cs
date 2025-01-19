@@ -52,7 +52,8 @@ public partial class MainForm : Form
     private void RefreshTree()
     {
         var selectedPathPassed = false;
-        TreeNode? selectedNode = null;
+        TreeNode? filteredNodeBeforeSelectedNode = null;
+        TreeNode? filteredNodeAfterSelectedNode = null;
 
         // Only save expanded paths when no filter => has filter
         var hasFilter = filterTextBox.Text != "";
@@ -89,34 +90,44 @@ public partial class MainForm : Form
             noteTreeView.EndUpdate();
 
             // Select node after refresh
-            if (selectedNode == null)
             {
-                // get last visible node of noteTreeView
-            }
-            else
-            {
+                // If expanding all, any node is visible
                 if (expandingAll)
                 {
-                    noteTreeView.SelectedNode = selectedNode;
+                    if (filteredNodeAfterSelectedNode != null)
+                        noteTreeView.SelectedNode = filteredNodeAfterSelectedNode;
+                    else if (filteredNodeBeforeSelectedNode != null)
+                        noteTreeView.SelectedNode = filteredNodeBeforeSelectedNode;
+                    else if (noteTreeView.Nodes.Count > 0)
+                        noteTreeView.SelectedNode = noteTreeView.Nodes[0];
                 }
+                // Node can be invisible, find the nearest visible node
                 else
                 {
-                    // Select the nearest node after refresh
-                    var nextNode = selectedNode;
-                    while (nextNode != null && !nextNode.GetDocument().MatchFilter(_filters))
-                        nextNode = nextNode.NextVisibleNode;
+                    TreeNode? selectedNode = null;
 
-                    if (nextNode != null)
+                    if (filteredNodeAfterSelectedNode != null)
                     {
-                        noteTreeView.SelectedNode = nextNode;
+                        selectedNode = filteredNodeAfterSelectedNode;
+                        while (selectedNode != null && !selectedNode.GetDocument().MatchFilter(_filters))
+                            selectedNode = selectedNode.NextVisibleNode;
                     }
-                    else
+
+                    if (selectedNode != null)
                     {
-                        var prevNode = selectedNode;
-                        while (prevNode != null && (!prevNode.IsInExpandedNode() || !prevNode.GetDocument().MatchFilter(_filters)))
-                            prevNode = prevNode.PrevNode;
-                        if (prevNode != null)
-                            noteTreeView.SelectedNode = prevNode;
+                        noteTreeView.SelectedNode = selectedNode;
+                    }
+                    else if (filteredNodeBeforeSelectedNode != null)
+                    {
+                        selectedNode = filteredNodeBeforeSelectedNode;
+                        while (selectedNode != null
+                               && !(selectedNode.IsInExpandedNode() && selectedNode.GetDocument().MatchFilter(_filters)))
+                            selectedNode = selectedNode.PrevNode;
+
+                        if (selectedNode != null)
+                            noteTreeView.SelectedNode = selectedNode;
+                        else if (noteTreeView.Nodes.Count > 0)
+                            noteTreeView.SelectedNode = noteTreeView.Nodes[0];
                     }
                 }
 
@@ -146,8 +157,10 @@ public partial class MainForm : Form
                     shouldAdd = true;
 
                     // Select next node if current selected node doesn't match the filter
-                    if (selectedPathPassed && selectedNode == null)
-                        selectedNode = subNode;
+                    if (selectedPathPassed)
+                        filteredNodeAfterSelectedNode ??= subNode;
+                    else
+                        filteredNodeBeforeSelectedNode = subNode;
                 }
 
                 if (doc.IsFolder && recursive)
@@ -213,6 +226,14 @@ public partial class MainForm : Form
 
             noteTreeView.ExpandAll();
 
+            TreeNode? selectedNode = null;
+            if (filteredNodeAfterSelectedNode != null)
+                selectedNode = filteredNodeAfterSelectedNode;
+            else if (filteredNodeBeforeSelectedNode != null)
+                selectedNode = filteredNodeBeforeSelectedNode;
+            else if (noteTreeView.Nodes.Count > 0)
+                selectedNode = noteTreeView.Nodes[0];
+
             if (selectedNode == null)
             {
                 if (nodes.Count > 0)
@@ -220,6 +241,8 @@ public partial class MainForm : Form
                 else if (parentNode != null)
                     selectedNode = parentNode;
             }
+
+            noteTreeView.SelectedNode = selectedNode;
         }
     }
 
