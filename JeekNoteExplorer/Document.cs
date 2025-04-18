@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using JeekTools;
 using Microsoft.VisualBasic.FileIO;
 using NPinyin;
 

@@ -714,4 +714,13 @@ public partial class MainForm : Form
     {
         PasteSelectedNode();
     }
+
+    private void exploreToToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        if (noteTreeView.SelectedNode == null)
+            return;
+
+        var doc = noteTreeView.SelectedNode.GetDocument();
+        ShellFile.Explore(doc.FullPath);
+    }
 }

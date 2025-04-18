@@ -1,0 +1,3 @@
+[submodule "JeekTools.NET"]
+	path = JeekTools.NET
+	url = git@github.com:tifish/JeekTools.NET.git

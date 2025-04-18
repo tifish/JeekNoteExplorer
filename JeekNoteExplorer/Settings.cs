@@ -1,4 +1,5 @@
 ﻿global using static JeekNoteExplorer.SettingsSingletonContainer;
+using JeekTools;
 using Newtonsoft.Json;
 
 namespace JeekNoteExplorer;

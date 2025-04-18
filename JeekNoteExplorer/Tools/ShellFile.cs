@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 public static class ShellFile
 {
     public static void Copy(params string[] paths)
@@ -52,5 +54,13 @@ public static class ShellFile
                     MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
+    }
+
+    public static void Explore(string fullPath)
+    {
+        if (File.Exists(fullPath))
+            Process.Start("explorer.exe", "/select, " + fullPath);
+        else
+            Process.Start("explorer.exe", fullPath);
     }
 }
