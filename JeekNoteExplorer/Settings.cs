@@ -28,7 +28,8 @@ public class AppSettings
     public static void Save()
     {
         Directory.CreateDirectory(Path.GetDirectoryName(SettingsFilePath)!);
-        File.WriteAllText(SettingsFilePath, JsonConvert.SerializeObject(Settings, Formatting.Indented));
+        var json = JsonConvert.SerializeObject(Settings, Formatting.Indented);
+        File.WriteAllText(SettingsFilePath, json);
     }
 
     private string _noteFolder = "";
