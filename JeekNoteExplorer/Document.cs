@@ -8,6 +8,15 @@ namespace JeekNoteExplorer;
 
 class Document
 {
+    public int Id { get; set; }
+
+    private static int _idCounter = 0;
+
+    public Document()
+    {
+        Id = _idCounter++;
+    }
+
     public string Name { get; set; } = "";
 
     private string _fullPath = "";

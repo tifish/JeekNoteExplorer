@@ -1,4 +1,6 @@
-﻿namespace JeekNoteExplorer
+﻿using JeekNoteExplorer.Controls;
+
+namespace JeekNoteExplorer
 {
     partial class MainForm
     {
@@ -30,7 +32,7 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            noteTreeView = new TreeView();
+            noteTreeView = new TreeViewFast();
             noteTreeViewContextMenuStrip = new ContextMenuStrip(components);
             openToolStripMenuItem = new ToolStripMenuItem();
             newFileToolStripMenuItem = new ToolStripMenuItem();
@@ -300,7 +302,7 @@
 
         #endregion
 
-        private TreeView noteTreeView;
+        private TreeViewFast noteTreeView;
         private FlowLayoutPanel toolsFlowLayoutPanel;
         private TableLayoutPanel tableLayoutPanel1;
         private TextBox filterTextBox;

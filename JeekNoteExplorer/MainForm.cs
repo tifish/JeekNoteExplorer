@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-using BlueMystic;
+﻿using BlueMystic;
 using NHotkey;
 using NHotkey.WindowsForms;
+using System.Globalization;
 
 namespace JeekNoteExplorer;
 
@@ -42,6 +42,8 @@ public partial class MainForm : Form
 
     private string _selectedPathAfterRefresh = "";
     private string _selectedPathBeforeFilter = "";
+    private List<Document> _filteredDocuments = [];
+    private Dictionary<int, int> _filteredDocumentsIdIndexMap = [];
 
     /// <summary>
     ///     There are 3 modes of refreshing the tree:
@@ -52,13 +54,12 @@ public partial class MainForm : Form
     private void RefreshTree()
     {
         var selectedPathPassed = false;
-        TreeNode? filteredNodeBeforeSelectedNode = null;
-        TreeNode? filteredNodeAfterSelectedNode = null;
+        var filteredNodeIdBeforeSelectedNode = -1;
+        var filteredNodeIdAfterSelectedNode = -1;
 
         // Only save expanded paths when no filter => has filter
         var hasFilter = filterTextBox.Text != "";
         var filterAll = filterAllCheckBox.Checked;
-        var expandingAll = hasFilter && filterAll;
 
         noteTreeView.BeginUpdate();
 
@@ -66,70 +67,54 @@ public partial class MainForm : Form
         {
             // Save selected path before filter, which will be used in filter current mode
             if (filterTextBox.Text.Length == 1 && _selectedPathBeforeFilter == "")
+            {
                 _selectedPathBeforeFilter = noteTreeView.SelectedNode?.GetDocument().FullPath ?? "";
+            }
             else if (filterTextBox.Text.Length == 0)
+            {
                 _selectedPathBeforeFilter = "";
+                _filteredDocuments.Clear();
+                _filteredDocumentsIdIndexMap.Clear();
+            }
 
             // _selectedPathAfterRefresh can be specified to select the nearest node after refresh.
             // If it's not specified, use the current selected node.
             if (_selectedPathAfterRefresh == "" && noteTreeView.SelectedNode != null)
                 _selectedPathAfterRefresh = noteTreeView.SelectedNode.GetDocument().FullPath;
 
-            noteTreeView.Nodes.Clear();
+            _filteredDocuments.Clear();
+            _filteredDocumentsIdIndexMap.Clear();
+
             // No filter or filter all
             if (!hasFilter || filterAll)
-                AddFolderToNode(RootFolder.Root, noteTreeView.Nodes, true);
+            {
+                if (AddFolderDocuments(RootFolder.Root, _filteredDocuments, true))
+                {
+                    for (var i = 0; i < _filteredDocuments.Count; i++)
+                        _filteredDocumentsIdIndexMap[_filteredDocuments[i].Id] = i;
+                }
+            }
             else // filter current
-                FilterCurrentFolder();
+                FilterCurrentFolder(_filteredDocuments);
+
+            // Load documents into noteTreeView
+            Func<Document, int> getId = (x => x.Id);
+            Func<Document, int?> getParentId = (x => x.Parent?.Id > 0 ? x.Parent.Id : null);
+            Func<Document, string> getDisplayName = (x => x.Name);
+            noteTreeView.LoadItems(_filteredDocuments, getId, getParentId, getDisplayName);
         }
         finally
         {
-            if (expandingAll)
-                noteTreeView.ExpandAll();
-
             noteTreeView.EndUpdate();
 
             // Select node after refresh
             {
-                // If expanding all, any node is visible
-                if (expandingAll)
-                {
-                    if (filteredNodeAfterSelectedNode != null)
-                        noteTreeView.SelectedNode = filteredNodeAfterSelectedNode;
-                    else if (filteredNodeBeforeSelectedNode != null)
-                        noteTreeView.SelectedNode = filteredNodeBeforeSelectedNode;
-                    else if (noteTreeView.Nodes.Count > 0)
-                        noteTreeView.SelectedNode = noteTreeView.Nodes[0];
-                }
-                // Node can be invisible, find the nearest visible node
-                else
-                {
-                    TreeNode? selectedNode = null;
-
-                    if (filteredNodeAfterSelectedNode != null)
-                    {
-                        selectedNode = filteredNodeAfterSelectedNode;
-                        while (selectedNode != null && !selectedNode.GetDocument().MatchFilter(_filters))
-                            selectedNode = selectedNode.NextVisibleNode;
-                    }
-
-                    if (selectedNode != null)
-                    {
-                        noteTreeView.SelectedNode = selectedNode;
-                    }
-                    else if (filteredNodeBeforeSelectedNode != null)
-                    {
-                        selectedNode = filteredNodeBeforeSelectedNode;
-                        while (selectedNode != null
-                               && !(selectedNode.IsInExpandedNode() && selectedNode.GetDocument().MatchFilter(_filters)))
-                            selectedNode = selectedNode.PrevNode;
-
-                        if (selectedNode != null)
-                            noteTreeView.SelectedNode = selectedNode;
-                        else if (noteTreeView.Nodes.Count > 0)
-                            noteTreeView.SelectedNode = noteTreeView.Nodes[0];
-                    }
-                }
+                if (filteredNodeIdAfterSelectedNode != -1)
+                    noteTreeView.SelectedNode = noteTreeView.GetNode(filteredNodeIdAfterSelectedNode);
+                else if (filteredNodeIdBeforeSelectedNode != -1)
+                    noteTreeView.SelectedNode = noteTreeView.GetNode(filteredNodeIdBeforeSelectedNode);
+                else if (noteTreeView.Nodes.Count > 0)
+                    noteTreeView.SelectedNode = noteTreeView.Nodes[0];
 
                 noteTreeView.SelectedNode?.EnsureVisible();
                 _selectedPathAfterRefresh = "";
@@ -138,56 +123,55 @@ public partial class MainForm : Form
 
         return;
 
-        bool AddFolderToNode(Folder folder, TreeNodeCollection nodes, bool recursive)
+        bool AddFolderDocuments(Folder folder, List<Document> documents, bool recursive)
         {
-            var hasAddedNode = false;
+            var hasAddedDoc = false;
 
             foreach (var doc in folder.SubFolders.Concat(folder.Files))
             {
                 if (!selectedPathPassed && _selectedPathAfterRefresh != "" && _selectedPathAfterRefresh == doc.FullPath)
                     selectedPathPassed = true;
 
-                TreeNode? subNode = null;
-                var shouldAdd = false;
+                var filterMatched = false;
 
                 if (doc.MatchFilter(_filters))
                 {
-                    subNode = new TreeNode();
-                    subNode.SetDocument(doc);
-                    shouldAdd = true;
+                    documents.Add(doc);
+                    filterMatched = true;
+                    hasAddedDoc = true;
 
                     // Select next node if current selected node doesn't match the filter
                     if (selectedPathPassed)
-                        filteredNodeAfterSelectedNode ??= subNode;
+                    {
+                        if (filteredNodeIdAfterSelectedNode == -1)
+                            filteredNodeIdAfterSelectedNode = doc.Id;
+                    }
                     else
-                        filteredNodeBeforeSelectedNode = subNode;
+                    {
+                        filteredNodeIdBeforeSelectedNode = doc.Id;
+                    }
                 }
 
                 if (doc.IsFolder && recursive)
                 {
-                    if (subNode == null)
-                    {
-                        subNode = new TreeNode();
-                        subNode.SetDocument(doc);
-                    }
+                    if (!filterMatched)
+                        documents.Add(doc);
 
-                    if (AddFolderToNode(doc.ToFolder(), subNode.Nodes, true))
-                        shouldAdd = true;
-                }
-
-                if (shouldAdd)
-                {
-                    nodes.Add(subNode!);
-                    hasAddedNode = true;
+                    if (AddFolderDocuments(doc.ToFolder(), documents, true))
+                        hasAddedDoc = true;
+                    else if (!filterMatched)
+                        documents.RemoveAt(documents.Count - 1);
                 }
             }
 
-            return hasAddedNode;
+            return hasAddedDoc;
         }
 
-        void FilterCurrentFolder()
+        void FilterCurrentFolder(List<Document> documents)
         {
             var doc = RootFolder.FindPath(_selectedPathBeforeFilter);
+
+            // If the selected path is not found, select the first folder/file in the root folder
             if (doc == null)
             {
                 if (RootFolder.Root.SubFolders.Count > 0)
@@ -200,6 +184,7 @@ public partial class MainForm : Form
                 _selectedPathBeforeFilter = doc.FullPath;
             }
 
+            // Get all parent folders from top to bottom
             var parentFolders = new List<Folder>();
             var parent = doc.Parent;
             while (parent != null && parent != RootFolder.Root)
@@ -210,36 +195,25 @@ public partial class MainForm : Form
 
             parentFolders.Reverse();
 
-            var nodes = noteTreeView.Nodes;
-            TreeNode? parentNode = null;
-            foreach (var parentFolder in parentFolders)
-            {
-                var treeNode = new TreeNode();
-                treeNode.SetDocument(parentFolder);
-                nodes.Add(treeNode);
+            // Add all parent folders to the documents list
+            documents.AddRange(parentFolders);
 
-                parentNode = treeNode;
-                nodes = treeNode.Nodes;
-            }
+            // Add all documents in the current folder with filter
+            AddFolderDocuments(doc.Parent!, documents, false);
 
-            AddFolderToNode(doc.Parent!, nodes, false);
-
-            noteTreeView.ExpandAll();
-
+            // Select proper node
             TreeNode? selectedNode = null;
-            if (filteredNodeAfterSelectedNode != null)
-                selectedNode = filteredNodeAfterSelectedNode;
-            else if (filteredNodeBeforeSelectedNode != null)
-                selectedNode = filteredNodeBeforeSelectedNode;
+            if (filteredNodeIdAfterSelectedNode != -1)
+                selectedNode = noteTreeView.GetNode(filteredNodeIdAfterSelectedNode);
+            else if (filteredNodeIdBeforeSelectedNode != -1)
+                selectedNode = noteTreeView.GetNode(filteredNodeIdBeforeSelectedNode);
             else if (noteTreeView.Nodes.Count > 0)
                 selectedNode = noteTreeView.Nodes[0];
 
             if (selectedNode == null)
             {
-                if (nodes.Count > 0)
-                    selectedNode = nodes[^1];
-                else if (parentNode != null)
-                    selectedNode = parentNode;
+                if (documents.Count > 0)
+                    selectedNode = noteTreeView.GetNode(documents[^1].Id);
             }
 
             noteTreeView.SelectedNode = selectedNode;
@@ -320,48 +294,26 @@ public partial class MainForm : Form
 
             // Up and Down to navigate matching nodes
             case { KeyCode: Keys.Up, Control: false, Alt: false, Shift: false }:
-                if (filterTextBox.Text == "")
-                    break;
-                if (noteTreeView.SelectedNode == null)
-                    break;
-
-                e.Handled = true;
-
-                var prevNode = noteTreeView.SelectedNode.PrevVisibleNode;
-                while (prevNode != null)
-                {
-                    if (prevNode.GetDocument().MatchFilter(_filters))
-                    {
-                        noteTreeView.SelectedNode = prevNode;
-                        break;
-                    }
-
-                    prevNode = prevNode.PrevVisibleNode;
-                }
-
+                if (NoteTreeViewUp())
+                    e.Handled = true;
                 break;
 
             // Up and Down to navigate matching nodes
             case { KeyCode: Keys.Down, Control: false, Alt: false, Shift: false }:
-                if (filterTextBox.Text == "")
-                    break;
-                if (noteTreeView.SelectedNode == null)
-                    break;
+                if (NoteTreeViewDown())
+                    e.Handled = true;
+                break;
 
-                e.Handled = true;
+            // PageUp and PageDown to navigate matching nodes
+            case { KeyCode: Keys.PageUp, Control: false, Alt: false, Shift: false }:
+                if (NoteTreeViewPageUp())
+                    e.Handled = true;
+                break;
 
-                var nextNode = noteTreeView.SelectedNode.NextVisibleNode;
-                while (nextNode != null)
-                {
-                    if (nextNode.GetDocument().MatchFilter(_filters))
-                    {
-                        noteTreeView.SelectedNode = nextNode;
-                        break;
-                    }
-
-                    nextNode = nextNode.NextVisibleNode;
-                }
-
+            // PageUp and PageDown to navigate matching nodes
+            case { KeyCode: Keys.PageDown, Control: false, Alt: false, Shift: false }:
+                if (NoteTreeViewPageDown())
+                    e.Handled = true;
                 break;
 
             // Ctrl+R or F5 to refresh the tree
@@ -409,6 +361,130 @@ public partial class MainForm : Form
                 e.Handled = PasteSelectedNode();
                 break;
         }
+    }
+
+    private bool NoteTreeViewUp()
+    {
+        if (filterTextBox.Text == "")
+            return false;
+        if (noteTreeView.SelectedNode == null)
+            return false;
+        if (!filterAllCheckBox.Checked)
+            return false;
+
+        var selectedDoc = noteTreeView.SelectedNode.GetDocument();
+        var index = _filteredDocumentsIdIndexMap[selectedDoc.Id] - 1;
+
+        while (index >= 0)
+        {
+            var doc = _filteredDocuments[index];
+            if (doc.MatchFilter(_filters))
+            {
+                noteTreeView.SelectedNode = noteTreeView.GetNode(doc.Id);
+                noteTreeView.SelectedNode.EnsureVisible();
+                break;
+            }
+
+            index--;
+        }
+
+        return true;
+    }
+
+    private bool NoteTreeViewDown()
+    {
+        if (filterTextBox.Text == "")
+            return false;
+        if (noteTreeView.SelectedNode == null)
+            return false;
+        if (!filterAllCheckBox.Checked)
+            return false;
+
+        var selectedDoc = noteTreeView.SelectedNode.GetDocument();
+        var index = _filteredDocumentsIdIndexMap[selectedDoc.Id] + 1;
+
+        while (index < _filteredDocuments.Count)
+        {
+            var doc = _filteredDocuments[index];
+            if (doc.MatchFilter(_filters))
+            {
+                noteTreeView.SelectedNode = noteTreeView.GetNode(doc.Id);
+                noteTreeView.SelectedNode.EnsureVisible();
+                break;
+            }
+
+            index++;
+        }
+
+        return true;
+    }
+
+    private bool NoteTreeViewPageUp()
+    {
+        if (filterTextBox.Text == "")
+            return false;
+        if (noteTreeView.SelectedNode == null)
+            return false;
+        if (!filterAllCheckBox.Checked)
+            return false;
+
+        var selectedDoc = noteTreeView.SelectedNode.GetDocument();
+        // Get how many notes show in the current page
+        var pageSize = noteTreeView.ClientSize.Height / noteTreeView.ItemHeight;
+        var index = _filteredDocumentsIdIndexMap[selectedDoc.Id] - 1;
+        if (index < 0)
+            return true;
+
+        TreeNode? node = null;
+        for (int i = 0; i < pageSize; i++)
+        {
+            var doc = _filteredDocuments[index];
+            node = noteTreeView.GetNode(doc.Id);
+            node.EnsureVisible();
+
+            index--;
+            if (index < 0)
+                break;
+        }
+
+        if (node != null)
+            noteTreeView.SelectedNode = node;
+
+        return true;
+    }
+
+    private bool NoteTreeViewPageDown()
+    {
+        if (filterTextBox.Text == "")
+            return false;
+        if (noteTreeView.SelectedNode == null)
+            return false;
+        if (!filterAllCheckBox.Checked)
+            return false;
+
+        var selectedDoc = noteTreeView.SelectedNode.GetDocument();
+        // Get how many notes show in the current page
+        var pageSize = noteTreeView.ClientSize.Height / noteTreeView.ItemHeight;
+        var index = _filteredDocumentsIdIndexMap[selectedDoc.Id] + 1;
+        if (index >= _filteredDocuments.Count)
+            return true;
+
+        TreeNode? node = null;
+        for (int i = 0; i < pageSize; i++)
+        {
+            var doc = _filteredDocuments[index];
+            node = noteTreeView.GetNode(doc.Id);
+            node.EnsureVisible();
+
+            index++;
+            if (index >= _filteredDocuments.Count)
+                break;
+        }
+
+        if (node != null)
+            noteTreeView.SelectedNode = node;
+
+        return true;
     }
 
     private void OpenSelectedNode()
