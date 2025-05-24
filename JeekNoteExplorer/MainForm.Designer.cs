@@ -166,7 +166,7 @@ namespace JeekNoteExplorer
             renameButton.Margin = new Padding(6);
             renameButton.Name = "renameButton";
             renameButton.Size = new Size(82, 31);
-            renameButton.TabIndex = 4;
+            renameButton.TabIndex = 1;
             renameButton.Text = "&Rename";
             renameButton.UseVisualStyleBackColor = true;
             renameButton.Click += renameButton_Click;
@@ -180,7 +180,7 @@ namespace JeekNoteExplorer
             deleteButton.Margin = new Padding(6);
             deleteButton.Name = "deleteButton";
             deleteButton.Size = new Size(69, 31);
-            deleteButton.TabIndex = 5;
+            deleteButton.TabIndex = 2;
             deleteButton.Text = "&Delete";
             deleteButton.UseVisualStyleBackColor = true;
             deleteButton.Click += deleteButton_Click;
@@ -209,7 +209,7 @@ namespace JeekNoteExplorer
             filterAllCheckBox.Margin = new Padding(4);
             filterAllCheckBox.Name = "filterAllCheckBox";
             filterAllCheckBox.Size = new Size(89, 25);
-            filterAllCheckBox.TabIndex = 6;
+            filterAllCheckBox.TabIndex = 4;
             filterAllCheckBox.Text = "&Filter all";
             filterAllCheckBox.UseVisualStyleBackColor = true;
             filterAllCheckBox.CheckedChanged += filterAllCheckBox_CheckedChanged;
@@ -221,7 +221,7 @@ namespace JeekNoteExplorer
             filterTextBox.Margin = new Padding(6);
             filterTextBox.Name = "filterTextBox";
             filterTextBox.Size = new Size(503, 29);
-            filterTextBox.TabIndex = 2;
+            filterTextBox.TabIndex = 5;
             filterTextBox.Visible = false;
             filterTextBox.TextChanged += filterTextBox_TextChanged;
             // 

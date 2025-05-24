@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            Hotkey hotkey2 = new Hotkey();
             tableLayoutPanel1 = new TableLayoutPanel();
             label1 = new Label();
             noteFolderTextBox = new TextBox();
@@ -47,9 +48,9 @@
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
             tableLayoutPanel1.Controls.Add(noteFolderTextBox, 1, 0);
             tableLayoutPanel1.Controls.Add(closeButton, 1, 3);
-            tableLayoutPanel1.Controls.Add(startWithSystemCheckBox, 0, 1);
-            tableLayoutPanel1.Controls.Add(label2, 0, 2);
-            tableLayoutPanel1.Controls.Add(wakeUpHotkeyInputBox, 1, 2);
+            tableLayoutPanel1.Controls.Add(startWithSystemCheckBox, 0, 2);
+            tableLayoutPanel1.Controls.Add(label2, 0, 1);
+            tableLayoutPanel1.Controls.Add(wakeUpHotkeyInputBox, 1, 1);
             tableLayoutPanel1.Location = new Point(17, 17);
             tableLayoutPanel1.Margin = new Padding(4);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -79,7 +80,7 @@
             noteFolderTextBox.Margin = new Padding(4);
             noteFolderTextBox.Name = "noteFolderTextBox";
             noteFolderTextBox.Size = new Size(427, 29);
-            noteFolderTextBox.TabIndex = 2;
+            noteFolderTextBox.TabIndex = 1;
             // 
             // closeButton
             // 
@@ -89,7 +90,7 @@
             closeButton.Margin = new Padding(4);
             closeButton.Name = "closeButton";
             closeButton.Size = new Size(107, 39);
-            closeButton.TabIndex = 3;
+            closeButton.TabIndex = 4;
             closeButton.Text = "Close";
             closeButton.UseVisualStyleBackColor = true;
             closeButton.Click += closeButton_Click;
@@ -99,10 +100,10 @@
             startWithSystemCheckBox.Anchor = AnchorStyles.Left;
             startWithSystemCheckBox.AutoSize = true;
             startWithSystemCheckBox.CheckAlign = ContentAlignment.MiddleRight;
-            startWithSystemCheckBox.Location = new Point(3, 40);
+            startWithSystemCheckBox.Location = new Point(3, 75);
             startWithSystemCheckBox.Name = "startWithSystemCheckBox";
             startWithSystemCheckBox.Size = new Size(160, 25);
-            startWithSystemCheckBox.TabIndex = 4;
+            startWithSystemCheckBox.TabIndex = 3;
             startWithSystemCheckBox.Text = "&Start with system";
             startWithSystemCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -110,7 +111,7 @@
             // 
             label2.Anchor = AnchorStyles.Right;
             label2.AutoSize = true;
-            label2.Location = new Point(49, 75);
+            label2.Location = new Point(49, 44);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new Size(113, 21);
@@ -121,13 +122,19 @@
             // 
             wakeUpHotkeyInputBox.Alt = false;
             wakeUpHotkeyInputBox.Control = false;
+            hotkey2.Alt = false;
+            hotkey2.Control = false;
+            hotkey2.KeyCode = Keys.None;
+            hotkey2.Shift = false;
+            hotkey2.Windows = false;
+            wakeUpHotkeyInputBox.Hotkey = hotkey2;
             wakeUpHotkeyInputBox.KeyCode = Keys.None;
-            wakeUpHotkeyInputBox.Location = new Point(169, 71);
+            wakeUpHotkeyInputBox.Location = new Point(169, 40);
             wakeUpHotkeyInputBox.Name = "wakeUpHotkeyInputBox";
             wakeUpHotkeyInputBox.Shift = false;
             wakeUpHotkeyInputBox.ShortcutsEnabled = false;
             wakeUpHotkeyInputBox.Size = new Size(428, 29);
-            wakeUpHotkeyInputBox.TabIndex = 6;
+            wakeUpHotkeyInputBox.TabIndex = 2;
             wakeUpHotkeyInputBox.Windows = false;
             wakeUpHotkeyInputBox.WordWrap = false;
             // 
