@@ -105,7 +105,7 @@ namespace JeekNoteExplorer
             newFolderToolStripMenuItem.ShortcutKeys = Keys.F7;
             newFolderToolStripMenuItem.Size = new Size(160, 22);
             newFolderToolStripMenuItem.Text = "New &folder";
-            newFolderToolStripMenuItem.Click += newfolderToolStripMenuItem_Click;
+            newFolderToolStripMenuItem.Click += newFolderToolStripMenuItem_Click;
             // 
             // renameToolStripMenuItem
             // 

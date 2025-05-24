@@ -739,7 +739,7 @@ public partial class MainForm : Form
         CreateNewFileOrDirectory(true);
     }
 
-    private void newfolderToolStripMenuItem_Click(object sender, EventArgs e)
+    private void newFolderToolStripMenuItem_Click(object sender, EventArgs e)
     {
         CreateNewFileOrDirectory(false);
     }
