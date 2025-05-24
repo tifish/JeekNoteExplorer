@@ -8,14 +8,18 @@ using ZLogger;
 
 namespace JeekNoteExplorer;
 
-public partial class MainForm : Form
+partial class MainForm : Form
 {
     private static readonly ILogger Log = LogManager.CreateLogger(nameof(MainForm));
+
+    public static MainForm? Instance { get; private set; }
 
     private readonly DarkModeCS _darkMode;
 
     public MainForm()
     {
+        Instance = this;
+
         InitializeComponent();
 
         _darkMode = new DarkModeCS(this);
@@ -23,12 +27,27 @@ public partial class MainForm : Form
 
     private void MainForm_Load(object sender, EventArgs e)
     {
-        // Register global hotkey to open JeekNoteExplorer
-        HotkeyManager.Current.AddOrReplace("OpenJeekNote", Keys.Alt | Keys.Oemtilde, OpenJeekNote);
+        RegisterWakeUpHotkey(Hotkey.Parse(Settings.WakeUpKey));
 
         RootFolder.Changed += RootFolderOnChanged;
 
         AppSettings.Load();
+    }
+
+    public void RegisterWakeUpHotkey(Hotkey hotkey)
+    {
+        try
+        {
+            HotkeyManager.Current.AddOrReplace("OpenJeekNote", hotkey.ToKeys(), OpenJeekNote);
+        }
+        catch (HotkeyAlreadyRegisteredException ex)
+        {
+            Log.ZLogError(ex, $"Hotkey {hotkey} is already registered");
+        }
+        catch (Exception ex)
+        {
+            Log.ZLogError(ex, $"Failed to register hotkey {hotkey}");
+        }
     }
 
     private void RootFolderOnChanged(object? sender, EventArgs e)

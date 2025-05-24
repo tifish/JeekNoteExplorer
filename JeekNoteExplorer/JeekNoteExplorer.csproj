@@ -9,6 +9,7 @@
         <OutDir>..\Bin</OutDir>
         <ApplicationIcon>Resources\App.ico</ApplicationIcon>
         <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
+        <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -58,7 +59,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\JeekTools.NET\JeekTools.csproj" />
+        <ProjectReference Include="..\JeekTools.NET\JeekTools.csproj" />
     </ItemGroup>
 
 </Project>

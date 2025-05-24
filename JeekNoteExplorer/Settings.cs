@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace JeekNoteExplorer;
 
-public class AppSettings
+class AppSettings
 {
     public static readonly string ExePath = Application.ExecutablePath;
     public static readonly string AppName = Path.GetFileNameWithoutExtension(ExePath);
@@ -61,9 +61,11 @@ public class AppSettings
                 RegistryHelper.DeleteValue(RunRegistryKey, AppName);
         }
     }
+
+    public string WakeUpKey { get; set; } = "Alt+`";
 }
 
-public static class SettingsSingletonContainer
+static class SettingsSingletonContainer
 {
     public static AppSettings Settings { get; set; } = new();
 }

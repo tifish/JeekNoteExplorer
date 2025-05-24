@@ -33,6 +33,8 @@
             noteFolderTextBox = new TextBox();
             closeButton = new Button();
             startWithSystemCheckBox = new CheckBox();
+            label2 = new Label();
+            wakeUpHotkeyInputBox = new JeekNoteExplorer.Controls.HotkeyInputBox();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -44,16 +46,19 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
             tableLayoutPanel1.Controls.Add(noteFolderTextBox, 1, 0);
-            tableLayoutPanel1.Controls.Add(closeButton, 1, 2);
+            tableLayoutPanel1.Controls.Add(closeButton, 1, 3);
             tableLayoutPanel1.Controls.Add(startWithSystemCheckBox, 0, 1);
+            tableLayoutPanel1.Controls.Add(label2, 0, 2);
+            tableLayoutPanel1.Controls.Add(wakeUpHotkeyInputBox, 1, 2);
             tableLayoutPanel1.Location = new Point(17, 17);
             tableLayoutPanel1.Margin = new Padding(4);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowCount = 4;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(721, 140);
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(721, 150);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // label1
@@ -80,7 +85,7 @@
             // 
             closeButton.Anchor = AnchorStyles.Right;
             closeButton.AutoSize = true;
-            closeButton.Location = new Point(610, 84);
+            closeButton.Location = new Point(610, 107);
             closeButton.Margin = new Padding(4);
             closeButton.Name = "closeButton";
             closeButton.Size = new Size(107, 39);
@@ -100,6 +105,31 @@
             startWithSystemCheckBox.TabIndex = 4;
             startWithSystemCheckBox.Text = "&Start with system";
             startWithSystemCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            label2.Anchor = AnchorStyles.Right;
+            label2.AutoSize = true;
+            label2.Location = new Point(49, 75);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(113, 21);
+            label2.TabIndex = 5;
+            label2.Text = "Wake up key:";
+            // 
+            // wakeUpHotkeyInputBox
+            // 
+            wakeUpHotkeyInputBox.Alt = false;
+            wakeUpHotkeyInputBox.Control = false;
+            wakeUpHotkeyInputBox.KeyCode = Keys.None;
+            wakeUpHotkeyInputBox.Location = new Point(169, 71);
+            wakeUpHotkeyInputBox.Name = "wakeUpHotkeyInputBox";
+            wakeUpHotkeyInputBox.Shift = false;
+            wakeUpHotkeyInputBox.ShortcutsEnabled = false;
+            wakeUpHotkeyInputBox.Size = new Size(428, 29);
+            wakeUpHotkeyInputBox.TabIndex = 6;
+            wakeUpHotkeyInputBox.Windows = false;
+            wakeUpHotkeyInputBox.WordWrap = false;
             // 
             // SettingsForm
             // 
@@ -130,5 +160,7 @@
         private TextBox noteFolderTextBox;
         private Button closeButton;
         private CheckBox startWithSystemCheckBox;
+        private Label label2;
+        private Controls.HotkeyInputBox wakeUpHotkeyInputBox;
     }
 }
