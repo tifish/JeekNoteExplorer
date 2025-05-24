@@ -3,11 +3,15 @@ using System.Text;
 using JeekTools;
 using Microsoft.VisualBasic.FileIO;
 using NPinyin;
+using ZLogger;
+using Microsoft.Extensions.Logging;
 
 namespace JeekNoteExplorer;
 
 class Document
 {
+    private static readonly ILogger Log = LogManager.CreateLogger(nameof(Document));
+
     public int Id { get; set; }
 
     private static int _idCounter = 0;
@@ -129,7 +133,7 @@ class Document
         }
         catch (Exception e)
         {
-            Log.Error(e, "Delete file failed: {FullPath}", FullPath);
+            Log.ZLogError(e, $"Delete file failed: {FullPath}");
             return false;
         }
     }
@@ -173,8 +177,7 @@ class Document
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Failed to rename {Type} {OldName} to {NewName}",
-                IsFile ? "file" : "directory", FullPath, newName);
+            Log.ZLogError(ex, $"Failed to rename {(IsFile ? "file" : "directory")} {FullPath} to {newName}");
             return false;
         }
     }

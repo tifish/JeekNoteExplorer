@@ -1,7 +1,13 @@
-﻿namespace JeekNoteExplorer;
+﻿using ZLogger;
+using Microsoft.Extensions.Logging;
+using JeekTools;
+
+namespace JeekNoteExplorer;
 
 static class RootFolder
 {
+    private static readonly ILogger Log = LogManager.CreateLogger(nameof(RootFolder));
+
     public static Folder Root { get; } = new();
 
     private static FileSystemWatcher? _watcher;
@@ -81,7 +87,7 @@ static class RootFolder
         {
             _pendingActions.Add(() =>
             {
-                Log.Debug("File creating: {FullPath}", e.FullPath);
+                Log.ZLogDebug($"File creating: {e.FullPath}");
 
                 var parentPath = Path.GetDirectoryName(e.FullPath);
                 if (parentPath == null)
@@ -133,7 +139,7 @@ static class RootFolder
         {
             _pendingActions.Add(() =>
             {
-                Log.Debug("File deleting: {FullPath}", e.FullPath);
+                Log.ZLogDebug($"File deleting: {e.FullPath}");
 
                 var doc = FindPath(e.FullPath);
                 doc?.Delete();
@@ -156,7 +162,7 @@ static class RootFolder
         {
             _pendingActions.Add(() =>
             {
-                Log.Debug("File renaming: {OldFullPath} -> {FullPath}", e.OldFullPath, e.FullPath);
+                Log.ZLogDebug($"File renaming: {e.OldFullPath} -> {e.FullPath}");
 
                 var doc = FindPath(e.OldFullPath);
                 if (doc == null)

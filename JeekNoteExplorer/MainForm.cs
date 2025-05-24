@@ -2,11 +2,16 @@
 using NHotkey;
 using NHotkey.WindowsForms;
 using System.Globalization;
+using Microsoft.Extensions.Logging;
+using JeekTools;
+using ZLogger;
 
 namespace JeekNoteExplorer;
 
 public partial class MainForm : Form
 {
+    private static readonly ILogger Log = LogManager.CreateLogger(nameof(MainForm));
+
     private readonly DarkModeCS _darkMode;
 
     public MainForm()
@@ -550,8 +555,7 @@ public partial class MainForm : Form
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("Failed to create {Type} {File}, exception: {Exception}",
-                        isFile ? "file" : "directory", newPath, ex.Message);
+                    Log.ZLogError(ex, $"Failed to create {(isFile ? "file" : "directory")} {newPath}");
                     return;
                 }
 
