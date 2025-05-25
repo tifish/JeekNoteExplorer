@@ -43,10 +43,12 @@ partial class MainForm : Form
         catch (HotkeyAlreadyRegisteredException ex)
         {
             Log.ZLogError(ex, $"Hotkey {hotkey} is already registered");
+            MessageBox.Show($"Hotkey {hotkey} is already registered");
         }
         catch (Exception ex)
         {
             Log.ZLogError(ex, $"Failed to register hotkey {hotkey}");
+            MessageBox.Show($"Failed to register hotkey {hotkey}");
         }
     }
 
