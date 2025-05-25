@@ -17,6 +17,8 @@ if not exist PublishDirectory.txt (
 
 set /p targetDir=<PublishDirectory.txt
 
+rd /s /q "%~dp0bin\Logs"
+del /s /q "%targetDir%\*.*"
 xcopy /e /y bin "%targetDir%\" &&^
 cd /d "%targetDir%" &&^
 start "" JeekNoteExplorer.exe ||^
