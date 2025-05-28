@@ -134,17 +134,15 @@ partial class MainForm : Form
             noteTreeView.EndUpdate();
 
             // Select node after refresh
-            {
-                if (filteredNodeIdAfterSelectedNode != -1)
-                    noteTreeView.SelectedNode = noteTreeView.GetNode(filteredNodeIdAfterSelectedNode);
-                else if (filteredNodeIdBeforeSelectedNode != -1)
-                    noteTreeView.SelectedNode = noteTreeView.GetNode(filteredNodeIdBeforeSelectedNode);
-                else if (noteTreeView.Nodes.Count > 0)
-                    noteTreeView.SelectedNode = noteTreeView.Nodes[0];
+            if (filteredNodeIdAfterSelectedNode != -1)
+                noteTreeView.SelectedNode = noteTreeView.GetNode(filteredNodeIdAfterSelectedNode);
+            else if (filteredNodeIdBeforeSelectedNode != -1)
+                noteTreeView.SelectedNode = noteTreeView.GetNode(filteredNodeIdBeforeSelectedNode);
+            else if (noteTreeView.Nodes.Count > 0)
+                noteTreeView.SelectedNode = noteTreeView.Nodes[0];
 
-                noteTreeView.SelectedNode?.EnsureVisible();
-                _selectedPathAfterRefresh = "";
-            }
+            noteTreeView.SelectedNode?.EnsureVisible();
+            _selectedPathAfterRefresh = "";
         }
 
         return;
@@ -226,23 +224,6 @@ partial class MainForm : Form
 
             // Add all documents in the current folder with filter
             AddFolderDocuments(doc.Parent!, documents, false);
-
-            // Select proper node
-            TreeNode? selectedNode = null;
-            if (filteredNodeIdAfterSelectedNode != -1)
-                selectedNode = noteTreeView.GetNode(filteredNodeIdAfterSelectedNode);
-            else if (filteredNodeIdBeforeSelectedNode != -1)
-                selectedNode = noteTreeView.GetNode(filteredNodeIdBeforeSelectedNode);
-            else if (noteTreeView.Nodes.Count > 0)
-                selectedNode = noteTreeView.Nodes[0];
-
-            if (selectedNode == null)
-            {
-                if (documents.Count > 0)
-                    selectedNode = noteTreeView.GetNode(documents[^1].Id);
-            }
-
-            noteTreeView.SelectedNode = selectedNode;
         }
     }
 
