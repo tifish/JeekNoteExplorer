@@ -124,9 +124,9 @@ partial class MainForm : Form
                 FilterCurrentFolder(_filteredDocuments);
 
             // Load documents into noteTreeView
-            Func<Document, int> getId = (x => x.Id);
-            Func<Document, int?> getParentId = (x => x.Parent?.Id > 0 ? x.Parent.Id : null);
-            Func<Document, string> getDisplayName = (x => x.Name);
+            int getId(Document x) => x.Id;
+            int? getParentId(Document x) => x.Parent?.Id > 0 ? x.Parent.Id : null;
+            string getDisplayName(Document x) => x.Name;
             noteTreeView.LoadItems(_filteredDocuments, getId, getParentId, getDisplayName);
         }
         finally
