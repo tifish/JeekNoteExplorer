@@ -68,7 +68,7 @@ namespace JeekNoteExplorer
             noteTreeView.Location = new Point(6, 61);
             noteTreeView.Margin = new Padding(6);
             noteTreeView.Name = "noteTreeView";
-            noteTreeView.Size = new Size(1601, 893);
+            noteTreeView.Size = new Size(924, 453);
             noteTreeView.TabIndex = 0;
             noteTreeView.AfterLabelEdit += noteTreeView_AfterLabelEdit;
             noteTreeView.NodeMouseClick += noteTreeView_NodeMouseClick;
@@ -250,7 +250,7 @@ namespace JeekNoteExplorer
             tableLayoutPanel1.RowCount = 2;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(1613, 960);
+            tableLayoutPanel1.Size = new Size(936, 520);
             tableLayoutPanel1.TabIndex = 2;
             // 
             // notifyIcon
@@ -279,7 +279,7 @@ namespace JeekNoteExplorer
             // 
             AutoScaleDimensions = new SizeF(10F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1661, 1001);
+            ClientSize = new Size(984, 561);
             Controls.Add(tableLayoutPanel1);
             DoubleBuffered = true;
             Font = new Font("Microsoft YaHei", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);

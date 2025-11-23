@@ -683,6 +683,48 @@ partial class MainForm : Form
     private void MainForm_Activated(object sender, EventArgs e)
     {
         noteTreeView.Focus();
+
+        EnsureFormWithinScreen();
+    }
+
+    private void EnsureFormWithinScreen()
+    {
+        if (WindowState == FormWindowState.Minimized || WindowState == FormWindowState.Maximized)
+            return;
+
+        var screen = Screen.FromControl(this);
+        var workingArea = screen.WorkingArea;
+
+        // Ensure form width doesn't exceed screen width
+        if (Width > workingArea.Width)
+        {
+            Width = Math.Max(workingArea.Width, MinimumSize.Width);
+        }
+
+        // Ensure form height doesn't exceed screen height
+        if (Height > workingArea.Height)
+        {
+            Height = Math.Max(workingArea.Height, MinimumSize.Height);
+        }
+
+        // Ensure form position stays within screen bounds
+        if (Left < workingArea.Left)
+        {
+            Left = workingArea.Left;
+        }
+        else if (Left + Width > workingArea.Right)
+        {
+            Left = workingArea.Right - Width;
+        }
+
+        if (Top < workingArea.Top)
+        {
+            Top = workingArea.Top;
+        }
+        else if (Top + Height > workingArea.Bottom)
+        {
+            Top = workingArea.Bottom - Height;
+        }
     }
 
     private void exitToolStripMenuItem_Click(object sender, EventArgs e)
