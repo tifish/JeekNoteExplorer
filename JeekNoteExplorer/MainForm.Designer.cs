@@ -284,6 +284,7 @@ namespace JeekNoteExplorer
             DoubleBuffered = true;
             Font = new Font("Microsoft YaHei", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
             Margin = new Padding(4);
+            MinimumSize = new Size(640, 400);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Jeek Note";

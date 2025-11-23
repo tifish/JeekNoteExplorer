@@ -32,10 +32,10 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             label1 = new Label();
             noteFolderTextBox = new TextBox();
-            closeButton = new Button();
             startWithSystemCheckBox = new CheckBox();
             label2 = new Label();
             wakeUpHotkeyInputBox = new JeekNoteExplorer.Controls.HotkeyInputBox();
+            closeButton = new Button();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -82,20 +82,6 @@
             noteFolderTextBox.Size = new Size(427, 29);
             noteFolderTextBox.TabIndex = 1;
             // 
-            // closeButton
-            // 
-            closeButton.Anchor = AnchorStyles.Right;
-            closeButton.AutoSize = true;
-            closeButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            closeButton.Location = new Point(536, 111);
-            closeButton.Margin = new Padding(4);
-            closeButton.Name = "closeButton";
-            closeButton.Size = new Size(61, 31);
-            closeButton.TabIndex = 4;
-            closeButton.Text = "Close";
-            closeButton.UseVisualStyleBackColor = true;
-            closeButton.Click += closeButton_Click;
-            // 
             // startWithSystemCheckBox
             // 
             startWithSystemCheckBox.Anchor = AnchorStyles.Left;
@@ -139,6 +125,20 @@
             wakeUpHotkeyInputBox.Windows = false;
             wakeUpHotkeyInputBox.WordWrap = false;
             // 
+            // closeButton
+            // 
+            closeButton.Anchor = AnchorStyles.Right;
+            closeButton.AutoSize = true;
+            closeButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            closeButton.Location = new Point(536, 111);
+            closeButton.Margin = new Padding(4);
+            closeButton.Name = "closeButton";
+            closeButton.Size = new Size(61, 31);
+            closeButton.TabIndex = 4;
+            closeButton.Text = "Close";
+            closeButton.UseVisualStyleBackColor = true;
+            closeButton.Click += closeButton_Click;
+            // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(10F, 21F);
@@ -146,7 +146,7 @@
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             CancelButton = closeButton;
-            ClientSize = new Size(1143, 630);
+            ClientSize = new Size(628, 184);
             Controls.Add(tableLayoutPanel1);
             Font = new Font("Microsoft YaHei", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Margin = new Padding(4);
