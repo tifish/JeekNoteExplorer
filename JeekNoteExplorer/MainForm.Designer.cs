@@ -37,8 +37,10 @@ namespace JeekNoteExplorer
             openToolStripMenuItem = new ToolStripMenuItem();
             newFileToolStripMenuItem = new ToolStripMenuItem();
             newFolderToolStripMenuItem = new ToolStripMenuItem();
+            exploreToToolStripMenuItem = new ToolStripMenuItem();
             renameToolStripMenuItem = new ToolStripMenuItem();
             deleteToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator1 = new ToolStripSeparator();
             copyToolStripMenuItem = new ToolStripMenuItem();
             cutToolStripMenuItem = new ToolStripMenuItem();
             pasteToolStripMenuItem = new ToolStripMenuItem();
@@ -52,8 +54,6 @@ namespace JeekNoteExplorer
             notifyIcon = new NotifyIcon(components);
             notifyIconContextMenuStrip = new ContextMenuStrip(components);
             exitToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparator1 = new ToolStripSeparator();
-            exploreToToolStripMenuItem = new ToolStripMenuItem();
             noteTreeViewContextMenuStrip.SuspendLayout();
             toolsFlowLayoutPanel.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -75,19 +75,18 @@ namespace JeekNoteExplorer
             noteTreeView.DoubleClick += noteTreeView_DoubleClick;
             noteTreeView.KeyDown += noteTreeView_KeyDown;
             noteTreeView.KeyPress += noteTreeView_KeyPress;
-            noteTreeView.Leave += noteTreeView_Leave;
             // 
             // noteTreeViewContextMenuStrip
             // 
             noteTreeViewContextMenuStrip.ImageScalingSize = new Size(24, 24);
             noteTreeViewContextMenuStrip.Items.AddRange(new ToolStripItem[] { openToolStripMenuItem, newFileToolStripMenuItem, newFolderToolStripMenuItem, exploreToToolStripMenuItem, renameToolStripMenuItem, deleteToolStripMenuItem, toolStripSeparator1, copyToolStripMenuItem, cutToolStripMenuItem, pasteToolStripMenuItem });
             noteTreeViewContextMenuStrip.Name = "notifyIconContextMenuStrip";
-            noteTreeViewContextMenuStrip.Size = new Size(181, 230);
+            noteTreeViewContextMenuStrip.Size = new Size(161, 208);
             // 
             // openToolStripMenuItem
             // 
             openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new Size(180, 22);
+            openToolStripMenuItem.Size = new Size(160, 22);
             openToolStripMenuItem.Text = "&Open";
             openToolStripMenuItem.Click += openToolStripMenuItem_Click;
             // 
@@ -107,39 +106,51 @@ namespace JeekNoteExplorer
             newFolderToolStripMenuItem.Text = "New &folder";
             newFolderToolStripMenuItem.Click += newFolderToolStripMenuItem_Click;
             // 
+            // exploreToToolStripMenuItem
+            // 
+            exploreToToolStripMenuItem.Name = "exploreToToolStripMenuItem";
+            exploreToToolStripMenuItem.Size = new Size(160, 22);
+            exploreToToolStripMenuItem.Text = "&Explore to...";
+            exploreToToolStripMenuItem.Click += exploreToToolStripMenuItem_Click;
+            // 
             // renameToolStripMenuItem
             // 
             renameToolStripMenuItem.Name = "renameToolStripMenuItem";
             renameToolStripMenuItem.ShortcutKeys = Keys.F2;
-            renameToolStripMenuItem.Size = new Size(180, 22);
+            renameToolStripMenuItem.Size = new Size(160, 22);
             renameToolStripMenuItem.Text = "&Rename";
             renameToolStripMenuItem.Click += renameToolStripMenuItem_Click;
             // 
             // deleteToolStripMenuItem
             // 
             deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            deleteToolStripMenuItem.Size = new Size(180, 22);
+            deleteToolStripMenuItem.Size = new Size(160, 22);
             deleteToolStripMenuItem.Text = "&Delete";
             deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(157, 6);
             // 
             // copyToolStripMenuItem
             // 
             copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            copyToolStripMenuItem.Size = new Size(180, 22);
+            copyToolStripMenuItem.Size = new Size(160, 22);
             copyToolStripMenuItem.Text = "Copy";
             copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
             // 
             // cutToolStripMenuItem
             // 
             cutToolStripMenuItem.Name = "cutToolStripMenuItem";
-            cutToolStripMenuItem.Size = new Size(180, 22);
+            cutToolStripMenuItem.Size = new Size(160, 22);
             cutToolStripMenuItem.Text = "Cut";
             cutToolStripMenuItem.Click += cutToolStripMenuItem_Click;
             // 
             // pasteToolStripMenuItem
             // 
             pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-            pasteToolStripMenuItem.Size = new Size(180, 22);
+            pasteToolStripMenuItem.Size = new Size(160, 22);
             pasteToolStripMenuItem.Text = "Paste";
             pasteToolStripMenuItem.Click += pasteToolStripMenuItem_Click;
             // 
@@ -263,18 +274,6 @@ namespace JeekNoteExplorer
             exitToolStripMenuItem.Size = new Size(92, 22);
             exitToolStripMenuItem.Text = "E&xit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
-            // 
-            // toolStripSeparator1
-            // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
-            // 
-            // exploreToToolStripMenuItem
-            // 
-            exploreToToolStripMenuItem.Name = "exploreToToolStripMenuItem";
-            exploreToToolStripMenuItem.Size = new Size(180, 22);
-            exploreToToolStripMenuItem.Text = "&Explore to...";
-            exploreToToolStripMenuItem.Click += exploreToToolStripMenuItem_Click;
             // 
             // MainForm
             // 

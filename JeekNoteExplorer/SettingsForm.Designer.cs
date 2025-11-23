@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Hotkey hotkey2 = new Hotkey();
+            Hotkey hotkey1 = new Hotkey();
             tableLayoutPanel1 = new TableLayoutPanel();
             label1 = new Label();
             noteFolderTextBox = new TextBox();
@@ -47,10 +47,10 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
             tableLayoutPanel1.Controls.Add(noteFolderTextBox, 1, 0);
-            tableLayoutPanel1.Controls.Add(closeButton, 1, 3);
             tableLayoutPanel1.Controls.Add(startWithSystemCheckBox, 0, 2);
             tableLayoutPanel1.Controls.Add(label2, 0, 1);
             tableLayoutPanel1.Controls.Add(wakeUpHotkeyInputBox, 1, 1);
+            tableLayoutPanel1.Controls.Add(closeButton, 1, 3);
             tableLayoutPanel1.Location = new Point(17, 17);
             tableLayoutPanel1.Margin = new Padding(4);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -59,7 +59,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(721, 150);
+            tableLayoutPanel1.Size = new Size(601, 150);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // label1
@@ -86,10 +86,11 @@
             // 
             closeButton.Anchor = AnchorStyles.Right;
             closeButton.AutoSize = true;
-            closeButton.Location = new Point(610, 107);
+            closeButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            closeButton.Location = new Point(536, 111);
             closeButton.Margin = new Padding(4);
             closeButton.Name = "closeButton";
-            closeButton.Size = new Size(107, 39);
+            closeButton.Size = new Size(61, 31);
             closeButton.TabIndex = 4;
             closeButton.Text = "Close";
             closeButton.UseVisualStyleBackColor = true;
@@ -122,12 +123,12 @@
             // 
             wakeUpHotkeyInputBox.Alt = false;
             wakeUpHotkeyInputBox.Control = false;
-            hotkey2.Alt = false;
-            hotkey2.Control = false;
-            hotkey2.KeyCode = Keys.None;
-            hotkey2.Shift = false;
-            hotkey2.Windows = false;
-            wakeUpHotkeyInputBox.Hotkey = hotkey2;
+            hotkey1.Alt = false;
+            hotkey1.Control = false;
+            hotkey1.KeyCode = Keys.None;
+            hotkey1.Shift = false;
+            hotkey1.Windows = false;
+            wakeUpHotkeyInputBox.Hotkey = hotkey1;
             wakeUpHotkeyInputBox.KeyCode = Keys.None;
             wakeUpHotkeyInputBox.Location = new Point(169, 40);
             wakeUpHotkeyInputBox.Name = "wakeUpHotkeyInputBox";

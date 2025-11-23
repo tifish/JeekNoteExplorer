@@ -335,12 +335,6 @@ partial class MainForm : Form
                 e.Handled = true;
                 break;
 
-            // Alt+F to switch filter mode
-            case { KeyCode: Keys.F, Control: false, Alt: true, Shift: false }:
-                filterAllCheckBox.Checked = !filterAllCheckBox.Checked;
-                e.Handled = true;
-                break;
-
             // Delete to delete the selected node
             case { KeyCode: Keys.Delete, Control: false, Alt: false, Shift: false }:
                 if (noteTreeView.SelectedNode == null)
@@ -670,6 +664,7 @@ partial class MainForm : Form
 
     private void settingsButton_Click(object sender, EventArgs e)
     {
+        noteTreeView.Focus();
         var settingsForm = new SettingsForm();
         settingsForm.ShowDialog();
     }
@@ -686,11 +681,6 @@ partial class MainForm : Form
     }
 
     private void MainForm_Activated(object sender, EventArgs e)
-    {
-        noteTreeView.Focus();
-    }
-
-    private void noteTreeView_Leave(object sender, EventArgs e)
     {
         noteTreeView.Focus();
     }
@@ -771,16 +761,19 @@ partial class MainForm : Form
 
     private void renameButton_Click(object sender, EventArgs e)
     {
+        noteTreeView.Focus();
         RenameSelectedNode();
     }
 
     private void deleteButton_Click(object sender, EventArgs e)
     {
+        noteTreeView.Focus();
         DeleteSelectedNode();
     }
 
     private void filterAllCheckBox_CheckedChanged(object sender, EventArgs e)
     {
+        noteTreeView.Focus();
         if (filterTextBox.Text != "")
             RefreshTree();
     }
