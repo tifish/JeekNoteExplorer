@@ -45,7 +45,7 @@
         <!-- <BeautyGitTree>master</BeautyGitTree> -->
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
         <PackageReference Include="NHotkey.WindowsForms" Version="3.0.0" />
         <PackageReference Include="NPinyin.Core" Version="3.0.0" />
         <PackageReference Include="nulastudio.NetBeauty" Version="2.1.5" />
