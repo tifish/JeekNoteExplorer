@@ -7,6 +7,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <OutDir>..\Bin</OutDir>
         <ApplicationIcon>Resources\App.ico</ApplicationIcon>
+        <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
+        <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
     </PropertyGroup>
     <PropertyGroup>
         <BeautySharedRuntimeMode>False</BeautySharedRuntimeMode>
