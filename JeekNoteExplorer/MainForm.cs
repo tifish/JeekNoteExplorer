@@ -33,7 +33,11 @@ partial class MainForm : Form
     {
         try
         {
-            HotkeyManager.Current.AddOrReplace("OpenJeekNote", hotkey.ToKeys(), OpenJeekNote);
+            HotkeyManager.Current.AddOrReplace(
+                "OpenJeekNote",
+                hotkey.ToKeys(),
+                OnOpenJeekNoteHotkeyPressed
+            );
         }
         catch (HotkeyAlreadyRegisteredException ex)
         {
@@ -52,13 +56,19 @@ partial class MainForm : Form
         RefreshTree();
     }
 
-    private void OpenJeekNote(object? sender, HotkeyEventArgs e)
+    private void OnOpenJeekNoteHotkeyPressed(object? sender, HotkeyEventArgs e)
+    {
+        ShowApp();
+
+        e.Handled = true;
+    }
+
+    private void ShowApp()
     {
         Show();
         if (WindowState == FormWindowState.Minimized)
             WindowState = FormWindowState.Normal;
         Activate();
-        e.Handled = true;
     }
 
     private string _selectedPathAfterRefresh = "";
@@ -740,7 +750,7 @@ partial class MainForm : Form
             if (Visible)
                 Hide();
             else
-                Show();
+                ShowApp();
         }
     }
 
