@@ -1,9 +1,9 @@
-﻿using BlueMystic;
+﻿using System.Globalization;
+using BlueMystic;
+using JeekTools;
+using Microsoft.Extensions.Logging;
 using NHotkey;
 using NHotkey.WindowsForms;
-using System.Globalization;
-using Microsoft.Extensions.Logging;
-using JeekTools;
 using ZLogger;
 
 namespace JeekNoteExplorer;
@@ -153,7 +153,11 @@ partial class MainForm : Form
 
             foreach (var doc in folder.SubFolders.Concat(folder.Files))
             {
-                if (!selectedPathPassed && _selectedPathAfterRefresh != "" && _selectedPathAfterRefresh == doc.FullPath)
+                if (
+                    !selectedPathPassed
+                    && _selectedPathAfterRefresh != ""
+                    && _selectedPathAfterRefresh == doc.FullPath
+                )
                     selectedPathPassed = true;
 
                 var filterMatched = false;
@@ -557,7 +561,10 @@ partial class MainForm : Form
                 }
                 catch (Exception ex)
                 {
-                    Log.ZLogError(ex, $"Failed to create {(isFile ? "file" : "directory")} {newPath}");
+                    Log.ZLogError(
+                        ex,
+                        $"Failed to create {(isFile ? "file" : "directory")} {newPath}"
+                    );
                     return;
                 }
 
@@ -591,7 +598,8 @@ partial class MainForm : Form
         if (noteTreeView.SelectedNode.IsEditing)
             return;
 
-        var nextSelectedNode = noteTreeView.SelectedNode.NextVisibleNode ?? noteTreeView.SelectedNode.PrevVisibleNode;
+        var nextSelectedNode =
+            noteTreeView.SelectedNode.NextVisibleNode ?? noteTreeView.SelectedNode.PrevVisibleNode;
         _selectedPathAfterRefresh = nextSelectedNode?.GetDocument().FullPath ?? "";
 
         noteTreeView.SelectedNode.GetDocument().DeleteInFileSystem();
@@ -638,7 +646,11 @@ partial class MainForm : Form
         if ((ModifierKeys & Keys.Alt) != 0)
             return;
 
-        if (char.GetUnicodeCategory(e.KeyChar) is UnicodeCategory.Control or UnicodeCategory.OtherNotAssigned)
+        if (
+            char.GetUnicodeCategory(e.KeyChar)
+            is UnicodeCategory.Control
+                or UnicodeCategory.OtherNotAssigned
+        )
             return;
 
         filterTextBox.Text += e.KeyChar;

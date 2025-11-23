@@ -212,7 +212,6 @@ public class DarkModeCS
         DWMWCP_ROUNDSMALL = 3,
     }
 
-
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct RECT
@@ -231,24 +230,41 @@ public class DarkModeCS
     public const int EM_SETCUEBANNER = 5377;
 
     [DllImport("user32.dll", CharSet = CharSet.Auto)]
-    public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
-
+    public static extern IntPtr SendMessage(
+        IntPtr hWnd,
+        int msg,
+        IntPtr wParam,
+        [MarshalAs(UnmanagedType.LPWStr)] string lParam
+    );
 
     [DllImport("DwmApi")]
-    public static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, int[] attrValue, int attrSize);
+    public static extern int DwmSetWindowAttribute(
+        IntPtr hwnd,
+        int attr,
+        int[] attrValue,
+        int attrSize
+    );
 
     [DllImport("dwmapi.dll")]
-    public static extern int DwmGetWindowAttribute(IntPtr hwnd, int dwAttribute, out RECT pvAttribute, int cbAttribute);
+    public static extern int DwmGetWindowAttribute(
+        IntPtr hwnd,
+        int dwAttribute,
+        out RECT pvAttribute,
+        int cbAttribute
+    );
 
     [DllImport("uxtheme.dll", CharSet = CharSet.Unicode)]
-    private static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
+    private static extern int SetWindowTheme(
+        IntPtr hWnd,
+        string pszSubAppName,
+        string pszSubIdList
+    );
 
     [DllImport("dwmapi.dll", EntryPoint = "#127")]
     public static extern void DwmGetColorizationParameters(ref DWMCOLORIZATIONcolors colors);
 
     [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
-    private static extern IntPtr CreateRoundRectRgn
-    (
+    private static extern IntPtr CreateRoundRectRgn(
         int nLeftRect, // x-coordinate of upper-left corner
         int nTopRect, // y-coordinate of upper-left corner
         int nRightRect, // x-coordinate of lower-right corner
@@ -298,7 +314,10 @@ public class DarkModeCS
             {
                 foreach (Control _control in OwnerForm.Controls)
                     ThemeControl(_control);
-                OwnerForm.ControlAdded += (sender, e) => { ThemeControl(e.Control); };
+                OwnerForm.ControlAdded += (sender, e) =>
+                {
+                    ThemeControl(e.Control);
+                };
             }
     }
 
@@ -316,12 +335,21 @@ public class DarkModeCS
         //Change the Colors only if its the default ones, this allows the user to set own colors:
         if (control.BackColor == SystemColors.Control || control.BackColor == SystemColors.Window)
             control.GetType().GetProperty("BackColor")?.SetValue(control, OScolors.Control);
-        if (control.ForeColor == SystemColors.ControlText || control.ForeColor == SystemColors.WindowText)
+        if (
+            control.ForeColor == SystemColors.ControlText
+            || control.ForeColor == SystemColors.WindowText
+        )
             control.GetType().GetProperty("ForeColor")?.SetValue(control, OScolors.TextActive);
         control.GetType().GetProperty("BorderStyle")?.SetValue(control, BStyle);
 
-        control.HandleCreated += (sender, e) => { ApplySystemDarkTheme(control); };
-        control.ControlAdded += (sender, e) => { ThemeControl(e.Control); };
+        control.HandleCreated += (sender, e) =>
+        {
+            ApplySystemDarkTheme(control);
+        };
+        control.ControlAdded += (sender, e) =>
+        {
+            ThemeControl(e.Control);
+        };
 
         if (control is TextBox tb)
         {
@@ -371,7 +399,10 @@ public class DarkModeCS
                         var tabPage = tab.TabPages[i];
                         tabPage.BackColor = OScolors.Surface;
                         tabPage.BorderStyle = BorderStyle.FixedSingle;
-                        tabPage.ControlAdded += (_s, _e) => { ThemeControl(_e.Control); };
+                        tabPage.ControlAdded += (_s, _e) =>
+                        {
+                            ThemeControl(_e.Control);
+                        };
 
                         var tBounds = e.Bounds;
                         //tBounds.Inflate(100, 100);
@@ -380,11 +411,23 @@ public class DarkModeCS
                         if (IsSelected)
                         {
                             e.Graphics.FillRectangle(tabBack, tBounds);
-                            TextRenderer.DrawText(e.Graphics, tabPage.Text, tabPage.Font, e.Bounds, OScolors.TextActive);
+                            TextRenderer.DrawText(
+                                e.Graphics,
+                                tabPage.Text,
+                                tabPage.Font,
+                                e.Bounds,
+                                OScolors.TextActive
+                            );
                         }
                         else
                         {
-                            TextRenderer.DrawText(e.Graphics, tabPage.Text, tabPage.Font, tab.GetTabRect(i), OScolors.TextInactive);
+                            TextRenderer.DrawText(
+                                e.Graphics,
+                                tabPage.Text,
+                                tabPage.Font,
+                                tab.GetTabRect(i),
+                                OScolors.TextInactive
+                            );
                         }
                     }
                 }
@@ -412,7 +455,8 @@ public class DarkModeCS
             button.FlatStyle = FStyle;
             button.FlatAppearance.CheckedBackColor = OScolors.Accent;
             button.BackColor = OScolors.Control;
-            button.FlatAppearance.BorderColor = OwnerForm.AcceptButton == button ? OScolors.Accent : OScolors.Control;
+            button.FlatAppearance.BorderColor =
+                OwnerForm.AcceptButton == button ? OScolors.Accent : OScolors.Control;
             //SetRoundBorders(button, 4, OScolors.SurfaceDark, 1);
         }
 
@@ -449,13 +493,19 @@ public class DarkModeCS
         {
             toolBar.GripStyle = ToolStripGripStyle.Hidden;
             toolBar.RenderMode = ToolStripRenderMode.Professional;
-            toolBar.Renderer = new MyRenderer(new CustomColorTable(OScolors), ColorizeIcons) { MyColors = OScolors };
+            toolBar.Renderer = new MyRenderer(new CustomColorTable(OScolors), ColorizeIcons)
+            {
+                MyColors = OScolors,
+            };
         }
 
         if (control is ContextMenuStrip cMenu)
         {
             cMenu.RenderMode = ToolStripRenderMode.Professional;
-            cMenu.Renderer = new MyRenderer(new CustomColorTable(OScolors), ColorizeIcons) { MyColors = OScolors };
+            cMenu.Renderer = new MyRenderer(new CustomColorTable(OScolors), ColorizeIcons)
+            {
+                MyColors = OScolors,
+            };
         }
 
         if (control is DataGridView grid)
@@ -467,7 +517,6 @@ public class DarkModeCS
 
             grid.DefaultCellStyle.BackColor = OScolors.Surface;
             grid.DefaultCellStyle.ForeColor = OScolors.TextActive;
-
 
             grid.ColumnHeadersDefaultCellStyle.BackColor = OScolors.Surface;
             grid.ColumnHeadersDefaultCellStyle.ForeColor = OScolors.TextActive;
@@ -517,10 +566,12 @@ public class DarkModeCS
     {
         try
         {
-            return (int)Registry.GetValue(
-                @"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize",
-                GetSystemColorModeInstead ? "SystemUsesLightTheme" : "AppsUseLightTheme",
-                -1);
+            return (int)
+                Registry.GetValue(
+                    @"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize",
+                    GetSystemColorModeInstead ? "SystemUsesLightTheme" : "AppsUseLightTheme",
+                    -1
+                );
         }
         catch
         {
@@ -541,10 +592,12 @@ public class DarkModeCS
             var opaque = true;
             var color = (int)colors.ColorizationColor;
 
-            return Color.FromArgb((byte)(opaque ? 255 : (color >> 24) & 0xff),
+            return Color.FromArgb(
+                (byte)(opaque ? 255 : (color >> 24) & 0xff),
                 (byte)((color >> 16) & 0xff),
                 (byte)((color >> 8) & 0xff),
-                (byte)color & 0xff);
+                (byte)color & 0xff
+            );
         }
 
         return Color.CadetBlue;
@@ -599,14 +652,22 @@ public class DarkModeCS
     /// <param name="borderColor">Color for the Border</param>
     /// <param name="borderSize">Size in pixels of the border line</param>
     /// <param name="underlinedStyle"></param>
-    public static void SetRoundBorders(Control _Control, int Radius = 10, Color? borderColor = null, int borderSize = 2, bool underlinedStyle = false)
+    public static void SetRoundBorders(
+        Control _Control,
+        int Radius = 10,
+        Color? borderColor = null,
+        int borderSize = 2,
+        bool underlinedStyle = false
+    )
     {
         borderColor = borderColor ?? Color.MediumSlateBlue;
 
         if (_Control != null)
         {
             _Control.GetType().GetProperty("BorderStyle")?.SetValue(_Control, BorderStyle.None);
-            _Control.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, _Control.Width, _Control.Height, Radius, Radius));
+            _Control.Region = Region.FromHrgn(
+                CreateRoundRectRgn(0, 0, _Control.Width, _Control.Height, Radius, Radius)
+            );
             _Control.Paint += (sender, e) =>
             {
                 //base.OnPaint(e);
@@ -627,7 +688,12 @@ public class DarkModeCS
                         //-Drawing
                         _Control.Region = new Region(pathBorderSmooth); //Set the rounded region of UserControl
                         if (Radius > 15) //Set the rounded region of TextBox component
-                            using (var pathTxt = GetFigurePath(_Control.ClientRectangle, borderSize * 2))
+                            using (
+                                var pathTxt = GetFigurePath(
+                                    _Control.ClientRectangle,
+                                    borderSize * 2
+                                )
+                            )
                             {
                                 _Control.Region = new Region(pathTxt);
                             }
@@ -642,7 +708,13 @@ public class DarkModeCS
                             graph.DrawPath(penBorderSmooth, pathBorderSmooth);
                             //Draw border
                             graph.SmoothingMode = SmoothingMode.None;
-                            graph.DrawLine(penBorder, 0, _Control.Height - 1, _Control.Width, _Control.Height - 1);
+                            graph.DrawLine(
+                                penBorder,
+                                0,
+                                _Control.Height - 1,
+                                _Control.Width,
+                                _Control.Height - 1
+                            );
                         }
                         else //Normal Style
                         {
@@ -681,8 +753,20 @@ public class DarkModeCS
 
         SetWindowTheme(control.Handle, "DarkMode_Explorer", null);
 
-        if (DwmSetWindowAttribute(control.Handle, (int)DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1, DarkModeOn, 4) != 0)
-            DwmSetWindowAttribute(control.Handle, (int)DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE, DarkModeOn, 4);
+        if (
+            DwmSetWindowAttribute(
+                control.Handle,
+                (int)DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1,
+                DarkModeOn,
+                4
+            ) != 0
+        )
+            DwmSetWindowAttribute(
+                control.Handle,
+                (int)DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE,
+                DarkModeOn,
+                4
+            );
 
         foreach (Control child in control.Controls)
             if (child.Controls.Count != 0)
@@ -805,7 +889,8 @@ public class MyRenderer : ToolStripProfessionalRenderer
     public bool ColorizeIcons { get; set; } = true;
     public OSThemeColors MyColors { get; set; } //<- Your Custom Colors Colection
 
-    public MyRenderer(ProfessionalColorTable table, bool pColorizeIcons = true) : base(table)
+    public MyRenderer(ProfessionalColorTable table, bool pColorizeIcons = true)
+        : base(table)
     {
         ColorizeIcons = pColorizeIcons;
     }
@@ -835,17 +920,13 @@ public class MyRenderer : ToolStripProfessionalRenderer
     // This method handles the RenderGrip event.
     protected override void OnRenderGrip(ToolStripGripRenderEventArgs e)
     {
-        DrawTitleBar(
-            e.Graphics,
-            new Rectangle(0, 0, e.ToolStrip.Width, 7));
+        DrawTitleBar(e.Graphics, new Rectangle(0, 0, e.ToolStrip.Width, 7));
     }
 
     // This method handles the RenderToolStripBorder event.
     protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
     {
-        DrawTitleBar(
-            e.Graphics,
-            new Rectangle(0, 0, e.ToolStrip.Width, 7));
+        DrawTitleBar(e.Graphics, new Rectangle(0, 0, e.ToolStrip.Width, 7));
     }
 
     // Background of the whole ToolBar Or MenuBar:
@@ -878,42 +959,39 @@ public class MyRenderer : ToolStripProfessionalRenderer
             gradientEnd = MyColors.Accent;
         }
 
-        using (Brush b = new LinearGradientBrush(
-                   bounds,
-                   gradientBegin,
-                   gradientEnd,
-                   LinearGradientMode.Vertical))
+        using (
+            Brush b = new LinearGradientBrush(
+                bounds,
+                gradientBegin,
+                gradientEnd,
+                LinearGradientMode.Vertical
+            )
+        )
         {
             g.FillRectangle(b, bounds);
         }
 
-        e.Graphics.DrawRectangle(
-            BordersPencil,
-            bounds);
+        e.Graphics.DrawRectangle(BordersPencil, bounds);
 
-        g.DrawLine(
-            BordersPencil,
-            bounds.X,
-            bounds.Y,
-            bounds.Width - 1,
-            bounds.Y);
+        g.DrawLine(BordersPencil, bounds.X, bounds.Y, bounds.Width - 1, bounds.Y);
 
-        g.DrawLine(
-            BordersPencil,
-            bounds.X,
-            bounds.Y,
-            bounds.X,
-            bounds.Height - 1);
+        g.DrawLine(BordersPencil, bounds.X, bounds.Y, bounds.X, bounds.Height - 1);
 
         var toolStrip = button.Owner;
 
-        if (!(button.Owner.GetItemAt(button.Bounds.X, button.Bounds.Bottom + 1) is ToolStripButton nextItem))
+        if (
+            !(
+                button.Owner.GetItemAt(button.Bounds.X, button.Bounds.Bottom + 1)
+                is ToolStripButton nextItem
+            )
+        )
             g.DrawLine(
                 BordersPencil,
                 bounds.X,
                 bounds.Height - 1,
                 bounds.X + bounds.Width - 1,
-                bounds.Height - 1);
+                bounds.Height - 1
+            );
     }
 
     // For DropDown Buttons on a ToolBar:
@@ -939,15 +1017,17 @@ public class MyRenderer : ToolStripProfessionalRenderer
         }
 
         //2. Draw the Box around the Control
-        using (Brush b = new LinearGradientBrush(
-                   bounds,
-                   gradientBegin,
-                   gradientEnd,
-                   LinearGradientMode.Vertical))
+        using (
+            Brush b = new LinearGradientBrush(
+                bounds,
+                gradientBegin,
+                gradientEnd,
+                LinearGradientMode.Vertical
+            )
+        )
         {
             e.Graphics.FillRectangle(b, bounds);
         }
-
 
         //3. Draws the Chevron:
 
@@ -986,11 +1066,14 @@ public class MyRenderer : ToolStripProfessionalRenderer
         }
 
         //2. Draw the Box around the Control
-        using (Brush b = new LinearGradientBrush(
-                   bounds,
-                   gradientBegin,
-                   gradientEnd,
-                   LinearGradientMode.Vertical))
+        using (
+            Brush b = new LinearGradientBrush(
+                bounds,
+                gradientBegin,
+                gradientEnd,
+                LinearGradientMode.Vertical
+            )
+        )
         {
             e.Graphics.FillRectangle(b, bounds);
         }
@@ -1002,9 +1085,15 @@ public class MyRenderer : ToolStripProfessionalRenderer
         var Padding = 2; //<- From the right side
         var cSize = new Size(8, 4); //<- Size of the Chevron: 8x4 px
         var ChevronPen = new Pen(MyColors.TextInactive, 2); //<- Color and Border Width
-        var P1 = new Point(bounds.Width - (cSize.Width + Padding), bounds.Height / 2 - cSize.Height / 2);
+        var P1 = new Point(
+            bounds.Width - (cSize.Width + Padding),
+            bounds.Height / 2 - cSize.Height / 2
+        );
         var P2 = new Point(bounds.Width - Padding, bounds.Height / 2 - cSize.Height / 2);
-        var P3 = new Point(bounds.Width - (cSize.Width / 2 + Padding), bounds.Height / 2 + cSize.Height / 2);
+        var P3 = new Point(
+            bounds.Width - (cSize.Width / 2 + Padding),
+            bounds.Height / 2 + cSize.Height / 2
+        );
 
         e.Graphics.DrawLine(ChevronPen, P1, P3);
         e.Graphics.DrawLine(ChevronPen, P2, P3);
@@ -1059,11 +1148,14 @@ public class MyRenderer : ToolStripProfessionalRenderer
         }
 
         if (DrawIt)
-            using (Brush b = new LinearGradientBrush(
-                       bounds,
-                       gradientBegin,
-                       gradientEnd,
-                       LinearGradientMode.Vertical))
+            using (
+                Brush b = new LinearGradientBrush(
+                    bounds,
+                    gradientBegin,
+                    gradientEnd,
+                    LinearGradientMode.Vertical
+                )
+            )
             {
                 g.FillRectangle(b, bounds);
             }
@@ -1101,25 +1193,34 @@ public class MyRenderer : ToolStripProfessionalRenderer
             g.CompositingQuality = CompositingQuality.HighQuality;
             g.SmoothingMode = SmoothingMode.HighQuality;
 
-
             var tR = c.R / 255f;
             var tG = c.G / 255f;
             var tB = c.B / 255f;
 
-            var colorMatrix = new ColorMatrix(new[]
-            {
-                new float[] { 0, 0, 0, 0, 0 },
-                new float[] { 0, 0, 0, 0, 0 },
-                new float[] { 0, 0, 0, 0, 0 },
-                new float[] { 0, 0, 0, 1, 0 }, //<- not changing alpha
-                new[] { tR, tG, tB, 0, 1 },
-            });
+            var colorMatrix = new ColorMatrix(
+                new[]
+                {
+                    new float[] { 0, 0, 0, 0, 0 },
+                    new float[] { 0, 0, 0, 0, 0 },
+                    new float[] { 0, 0, 0, 0, 0 },
+                    new float[] { 0, 0, 0, 1, 0 }, //<- not changing alpha
+                    new[] { tR, tG, tB, 0, 1 },
+                }
+            );
 
             var attributes = new ImageAttributes();
             attributes.SetColorMatrix(colorMatrix);
 
-            g.DrawImage(bmp, new Rectangle(0, 0, bmp.Width, bmp.Height),
-                0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, attributes);
+            g.DrawImage(
+                bmp,
+                new Rectangle(0, 0, bmp.Width, bmp.Height),
+                0,
+                0,
+                bmp.Width,
+                bmp.Height,
+                GraphicsUnit.Pixel,
+                attributes
+            );
         }
 
         return bmp2;

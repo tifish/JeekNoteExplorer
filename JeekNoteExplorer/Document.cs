@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Text;
 using JeekTools;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualBasic.FileIO;
 using NPinyin;
 using ZLogger;
-using Microsoft.Extensions.Logging;
 
 namespace JeekNoteExplorer;
 
@@ -66,11 +66,17 @@ class Document
         if (filters.Count == 0)
             return true;
 
-        if (filters.All(filter => Name.Contains(filter, StringComparison.InvariantCultureIgnoreCase)))
+        if (
+            filters.All(filter =>
+                Name.Contains(filter, StringComparison.InvariantCultureIgnoreCase)
+            )
+        )
             return true;
 
         var pinyinName = Pinyin.GetInitials(Name);
-        return filters.All(filter => pinyinName.Contains(filter, StringComparison.InvariantCultureIgnoreCase));
+        return filters.All(filter =>
+            pinyinName.Contains(filter, StringComparison.InvariantCultureIgnoreCase)
+        );
     }
 
     public void Delete()
@@ -90,10 +96,7 @@ class Document
     {
         if (IsFile && File.Exists(FullPath))
         {
-            Process.Start(new ProcessStartInfo(FullPath)
-            {
-                UseShellExecute = true,
-            });
+            Process.Start(new ProcessStartInfo(FullPath) { UseShellExecute = true });
             return true;
         }
 
@@ -104,10 +107,7 @@ class Document
     {
         if (IsFolder && Directory.Exists(FullPath))
         {
-            Process.Start(new ProcessStartInfo(FullPath)
-            {
-                UseShellExecute = true,
-            });
+            Process.Start(new ProcessStartInfo(FullPath) { UseShellExecute = true });
             return true;
         }
 
@@ -120,13 +120,25 @@ class Document
         {
             if (IsFile)
             {
-                FileSystem.DeleteFile(FullPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+                FileSystem.DeleteFile(
+                    FullPath,
+                    UIOption.AllDialogs,
+                    RecycleOption.SendToRecycleBin
+                );
                 if (Directory.Exists(AssetsPath))
-                    FileSystem.DeleteDirectory(AssetsPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+                    FileSystem.DeleteDirectory(
+                        AssetsPath,
+                        UIOption.AllDialogs,
+                        RecycleOption.SendToRecycleBin
+                    );
             }
             else
             {
-                FileSystem.DeleteDirectory(FullPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+                FileSystem.DeleteDirectory(
+                    FullPath,
+                    UIOption.AllDialogs,
+                    RecycleOption.SendToRecycleBin
+                );
             }
 
             return true;
@@ -177,7 +189,10 @@ class Document
         }
         catch (Exception ex)
         {
-            Log.ZLogError(ex, $"Failed to rename {(IsFile ? "file" : "directory")} {FullPath} to {newName}");
+            Log.ZLogError(
+                ex,
+                $"Failed to rename {(IsFile ? "file" : "directory")} {FullPath} to {newName}"
+            );
             return false;
         }
     }

@@ -19,24 +19,27 @@ class Folder : Document
     }
 
     // English first, then the current culture language
-    private static readonly Comparer<string> StringComparer = Comparer<string>.Create((x, y) =>
-    {
-        if ((IsEnglish(x) && IsEnglish(y)) || (!IsEnglish(x) && !IsEnglish(y)))
-            return string.Compare(x, y, CultureInfo.CurrentCulture, CompareOptions.StringSort);
-
-        // x first
-        if (IsEnglish(x) && !IsEnglish(y))
-            return -1;
-
-        // y first
-        return 1;
-
-        bool IsEnglish(string s)
+    private static readonly Comparer<string> StringComparer = Comparer<string>.Create(
+        (x, y) =>
         {
-            return s.All(c => c <= 'z');
-        }
-    });
+            if ((IsEnglish(x) && IsEnglish(y)) || (!IsEnglish(x) && !IsEnglish(y)))
+                return string.Compare(x, y, CultureInfo.CurrentCulture, CompareOptions.StringSort);
 
-    private static readonly Comparer<Document> DocumentComparer = Comparer<Document>.Create((x, y) =>
-        StringComparer.Compare(x.Name, y.Name));
+            // x first
+            if (IsEnglish(x) && !IsEnglish(y))
+                return -1;
+
+            // y first
+            return 1;
+
+            bool IsEnglish(string s)
+            {
+                return s.All(c => c <= 'z');
+            }
+        }
+    );
+
+    private static readonly Comparer<Document> DocumentComparer = Comparer<Document>.Create(
+        (x, y) => StringComparer.Compare(x.Name, y.Name)
+    );
 }

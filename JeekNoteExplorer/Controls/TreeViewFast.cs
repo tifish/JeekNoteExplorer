@@ -12,7 +12,12 @@
         /// <param name="getId">Function to parse Id value from item object</param>
         /// <param name="getParentId">Function to parse parentId value from item object</param>
         /// <param name="getDisplayName">Function to parse display name value from item object. This is used as node text.</param>
-        public void LoadItems<T>(IEnumerable<T> items, Func<T, int> getId, Func<T, int?> getParentId, Func<T, string> getDisplayName)
+        public void LoadItems<T>(
+            IEnumerable<T> items,
+            Func<T, int> getId,
+            Func<T, int?> getParentId,
+            Func<T, string> getDisplayName
+        )
         {
             // Clear view and internal dictionary
             Nodes.Clear();
@@ -23,7 +28,12 @@
             {
                 var id = getId(item);
                 var displayName = getDisplayName(item);
-                var node = new TreeNode { Name = id.ToString(), Text = displayName, Tag = item };
+                var node = new TreeNode
+                {
+                    Name = id.ToString(),
+                    Text = displayName,
+                    Tag = item,
+                };
                 _treeNodes.Add(getId(item), node);
             }
 
@@ -77,7 +87,6 @@
             return (T)GetNode(id).Tag;
         }
 
-
         /// <summary>
         /// Get parent item.
         /// Will return NULL if item is at top level.
@@ -85,7 +94,8 @@
         /// <typeparam name="T">Item type</typeparam>
         /// <param name="id">Item id</param>
         /// <returns>Item object</returns>
-        public T? GetParent<T>(int id) where T : class
+        public T? GetParent<T>(int id)
+            where T : class
         {
             var parentNode = GetNode(id).Parent;
             return parentNode == null ? null : (T)parentNode.Tag;

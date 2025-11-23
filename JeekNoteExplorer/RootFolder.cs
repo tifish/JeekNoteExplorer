@@ -1,6 +1,6 @@
-﻿using ZLogger;
+﻿using JeekTools;
 using Microsoft.Extensions.Logging;
-using JeekTools;
+using ZLogger;
 
 namespace JeekNoteExplorer;
 
@@ -18,9 +18,8 @@ static class RootFolder
             return;
 
         _watcher = new FileSystemWatcher();
-        _watcher.NotifyFilter = NotifyFilters.Attributes
-                                | NotifyFilters.FileName
-                                | NotifyFilters.DirectoryName;
+        _watcher.NotifyFilter =
+            NotifyFilters.Attributes | NotifyFilters.FileName | NotifyFilters.DirectoryName;
         _watcher.IncludeSubdirectories = true;
         _watcher.Created += OnFileCreated;
         _watcher.Deleted += OnFileDeleted;
@@ -204,7 +203,7 @@ static class RootFolder
         }
 
         return currentFolder.Files.Find(file => file.Name == pathItems.Last())
-               ?? currentFolder.SubFolders.Find(subFolder => subFolder.Name == pathItems.Last());
+            ?? currentFolder.SubFolders.Find(subFolder => subFolder.Name == pathItems.Last());
     }
 
     private static void RefreshFolder(Folder folder)
@@ -252,8 +251,6 @@ static class RootFolder
 
     private static bool IsIgnored(string dirName)
     {
-        return dirName.StartsWith('.')
-               || dirName.EndsWith(".assets")
-               || dirName.EndsWith("_files");
+        return dirName.StartsWith('.') || dirName.EndsWith(".assets") || dirName.EndsWith("_files");
     }
 }

@@ -49,9 +49,12 @@ public static class ShellFile
             }
             catch (IOException ex)
             {
-                MessageBox.Show(@"Failed to perform the specified operation:\n\n" + ex.Message,
+                MessageBox.Show(
+                    @"Failed to perform the specified operation:\n\n" + ex.Message,
                     @"File operation failed",
-                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Stop
+                );
             }
         }
     }

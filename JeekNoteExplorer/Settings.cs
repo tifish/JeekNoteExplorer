@@ -10,8 +10,12 @@ class AppSettings
     public static readonly string AppName = Path.GetFileNameWithoutExtension(ExePath);
     public static readonly string ExeDirectory = Path.GetDirectoryName(ExePath)!;
 
-    public static readonly string SettingsFilePath =
-        Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE")!, @"AppData\Local", AppName, "Settings.json");
+    public static readonly string SettingsFilePath = Path.Combine(
+        Environment.GetEnvironmentVariable("USERPROFILE")!,
+        @"AppData\Local",
+        AppName,
+        "Settings.json"
+    );
 
     public static readonly string NewFilesDirectory = Path.Combine(ExeDirectory, "NewFiles");
 
@@ -20,7 +24,9 @@ class AppSettings
         if (!File.Exists(SettingsFilePath))
             return;
 
-        var settings = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(SettingsFilePath));
+        var settings = JsonConvert.DeserializeObject<AppSettings>(
+            File.ReadAllText(SettingsFilePath)
+        );
         if (settings != null)
             Settings = settings;
     }
@@ -48,7 +54,8 @@ class AppSettings
         }
     }
 
-    private const string RunRegistryKey = @"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+    private const string RunRegistryKey =
+        @"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
 
     public bool StartWithSystem
     {
