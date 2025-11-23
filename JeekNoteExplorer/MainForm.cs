@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using BlueMystic;
 using JeekTools;
 using Microsoft.Extensions.Logging;
 using NHotkey;
@@ -14,15 +13,11 @@ partial class MainForm : Form
 
     public static MainForm? Instance { get; private set; }
 
-    private readonly DarkModeCS _darkMode;
-
     public MainForm()
     {
         Instance = this;
 
         InitializeComponent();
-
-        _darkMode = new DarkModeCS(this);
     }
 
     private void MainForm_Load(object sender, EventArgs e)

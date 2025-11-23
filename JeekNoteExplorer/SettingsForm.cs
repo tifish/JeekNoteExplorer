@@ -1,15 +1,10 @@
-﻿using BlueMystic;
-
-namespace JeekNoteExplorer;
+﻿namespace JeekNoteExplorer;
 
 public partial class SettingsForm : Form
 {
-    private readonly DarkModeCS _darkMode;
-
     public SettingsForm()
     {
         InitializeComponent();
-        _darkMode = new DarkModeCS(this);
     }
 
     private void closeButton_Click(object sender, EventArgs e)
