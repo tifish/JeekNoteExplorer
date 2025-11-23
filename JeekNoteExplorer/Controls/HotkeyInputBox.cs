@@ -12,18 +12,36 @@ namespace JeekNoteExplorer.Controls
 
         #region Properties to hide from the designer
         [Browsable(false)]
-        public new string[] Lines { get { return [Text]; } private set { base.Lines = value; } }
+        public new string[] Lines
+        {
+            get { return [Text]; }
+            private set { base.Lines = value; }
+        }
+
         [Browsable(false)]
-        public override bool Multiline { get { return false; } }
+        public override bool Multiline
+        {
+            get { return false; }
+        }
+
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public new char PasswordChar { get; set; }
+
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public new ScrollBars ScrollBars { get; set; }
+
         [Browsable(false)]
-        public override bool ShortcutsEnabled { get { return false; } }
+        public override bool ShortcutsEnabled
+        {
+            get { return false; }
+        }
+
         // [Browsable(false)]
         // public override string Text { get { return base.Text; } set { base.Text = value ?? ""; } }
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public new bool WordWrap { get; set; }
         #endregion
 
@@ -38,10 +56,18 @@ namespace JeekNoteExplorer.Controls
             }
             return control;
         }
-        public bool IsFocused { get { return FindFocusedControl(Form.ActiveForm) == this; } }
-        public static bool TypeIsFocused { get { return FindFocusedControl(Form.ActiveForm) is HotkeyInputBox; } }
+
+        public bool IsFocused
+        {
+            get { return FindFocusedControl(Form.ActiveForm) == this; }
+        }
+        public static bool TypeIsFocused
+        {
+            get { return FindFocusedControl(Form.ActiveForm) is HotkeyInputBox; }
+        }
         #endregion
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Hotkey Hotkey
         {
             get;
@@ -52,11 +78,40 @@ namespace JeekNoteExplorer.Controls
             }
         } = new();
 
-        public Keys KeyCode { get { return Hotkey.KeyCode; } set { Hotkey.KeyCode = value; } }
-        public bool Windows { get { return Hotkey.Windows; } set { Hotkey.Windows = value; } }
-        public bool Control { get { return Hotkey.Control; } set { Hotkey.Control = value; } }
-        public bool Alt { get { return Hotkey.Alt; } set { Hotkey.Alt = value; } }
-        public bool Shift { get { return Hotkey.Shift; } set { Hotkey.Shift = value; } }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public Keys KeyCode
+        {
+            get { return Hotkey.KeyCode; }
+            set { Hotkey.KeyCode = value; }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public bool Windows
+        {
+            get { return Hotkey.Windows; }
+            set { Hotkey.Windows = value; }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public bool Control
+        {
+            get { return Hotkey.Control; }
+            set { Hotkey.Control = value; }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public bool Alt
+        {
+            get { return Hotkey.Alt; }
+            set { Hotkey.Alt = value; }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public bool Shift
+        {
+            get { return Hotkey.Shift; }
+            set { Hotkey.Shift = value; }
+        }
 
         public void Reset()
         {
@@ -102,6 +157,7 @@ namespace JeekNoteExplorer.Controls
         const int WM_IME_CHAR = 0x286;
 
         private int _keysPressed = 0;
+
         protected override bool ProcessKeyMessage(ref Message m)
         {
             if (m.Msg == WM_KEYUP || m.Msg == WM_SYSKEYUP)
@@ -121,7 +177,11 @@ namespace JeekNoteExplorer.Controls
                 else
                 {
                     // Print Screen doesn't seem to be part of WM_KEYDOWN/WM_SYSKEYDOWN...
-                    if (m.Msg == WM_KEYDOWN || m.Msg == WM_SYSKEYDOWN || e.KeyCode == Keys.PrintScreen)
+                    if (
+                        m.Msg == WM_KEYDOWN
+                        || m.Msg == WM_SYSKEYDOWN
+                        || e.KeyCode == Keys.PrintScreen
+                    )
                     {
                         // Start over if we had no keys pressed, or have a selection (since it's always select all)
                         if (_keysPressed < 1 || SelectionLength > 0)
@@ -134,9 +194,11 @@ namespace JeekNoteExplorer.Controls
                         Shift = e.Shift;
                         Alt = e.Alt;
 
-                        if (e.KeyCode != Keys.ShiftKey
+                        if (
+                            e.KeyCode != Keys.ShiftKey
                             && e.KeyCode != Keys.ControlKey
-                            && e.KeyCode != Keys.Menu)
+                            && e.KeyCode != Keys.Menu
+                        )
                             KeyCode = e.KeyCode;
 
                         _keysPressed++;
@@ -171,7 +233,7 @@ public class Hotkey
             Windows = Windows,
             Control = Control,
             Alt = Alt,
-            Shift = Shift
+            Shift = Shift,
         };
     }
 
@@ -276,10 +338,14 @@ public class Hotkey
     public Keys ToKeys()
     {
         var keys = Keys.None;
-        if (Windows) keys |= Keys.LWin;
-        if (Control) keys |= Keys.Control;
-        if (Alt) keys |= Keys.Alt;
-        if (Shift) keys |= Keys.Shift;
+        if (Windows)
+            keys |= Keys.LWin;
+        if (Control)
+            keys |= Keys.Control;
+        if (Alt)
+            keys |= Keys.Alt;
+        if (Shift)
+            keys |= Keys.Shift;
         keys |= KeyCode;
         return keys;
     }
