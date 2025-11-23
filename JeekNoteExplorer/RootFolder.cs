@@ -17,10 +17,12 @@ static class RootFolder
         if (_watcher != null)
             return;
 
-        _watcher = new FileSystemWatcher();
-        _watcher.NotifyFilter =
-            NotifyFilters.Attributes | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-        _watcher.IncludeSubdirectories = true;
+        _watcher = new FileSystemWatcher
+        {
+            NotifyFilter =
+                NotifyFilters.Attributes | NotifyFilters.FileName | NotifyFilters.DirectoryName,
+            IncludeSubdirectories = true,
+        };
         _watcher.Created += OnFileCreated;
         _watcher.Deleted += OnFileDeleted;
         _watcher.Renamed += OnFileRenamed;
@@ -127,8 +129,21 @@ static class RootFolder
         }
     }
 
+    // FileSystemWatcher has a bug: When renaming a file with only case changed,
+    // it will trigger a file deleted event before renamed event.
+    // Just ignore the deleted event once.
+    // This can only deal with renaming inside app.
+    // For such a renaming outside app the file will disappear from the tree.
+    public static int IgnoreNextFileDeletedEventCount { get; set; }
+
     private static void OnFileDeleted(object sender, FileSystemEventArgs e)
     {
+        if (IgnoreNextFileDeletedEventCount > 0)
+        {
+            IgnoreNextFileDeletedEventCount--;
+            return;
+        }
+
         var docName = Path.GetFileName(e.FullPath);
         if (IsIgnored(docName))
             return;

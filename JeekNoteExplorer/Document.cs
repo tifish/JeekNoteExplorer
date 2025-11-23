@@ -156,6 +156,9 @@ class Document
     {
         try
         {
+            var onlyCaseChanged = string.Equals(Name, newName, StringComparison.OrdinalIgnoreCase);
+            var newPath = Path.Join(Path.GetDirectoryName(FullPath)!, newName);
+
             if (IsFile)
             {
                 if (!File.Exists(FullPath))
@@ -163,8 +166,10 @@ class Document
 
                 if (Directory.Exists(AssetsPath))
                 {
-                    var newAssetsPath = Path.ChangeExtension(newName, ".assets");
-                    FileSystem.RenameDirectory(AssetsPath, newAssetsPath);
+                    var newAssetsPath = Path.ChangeExtension(newPath, ".assets");
+                    if (onlyCaseChanged)
+                        RootFolder.IgnoreNextFileDeletedEventCount++;
+                    Directory.Move(AssetsPath, newAssetsPath);
 
                     var ext = Path.GetExtension(FullPath);
                     if (ext == ".md")
@@ -178,11 +183,15 @@ class Document
                     }
                 }
 
-                FileSystem.RenameFile(FullPath, newName);
+                if (onlyCaseChanged)
+                    RootFolder.IgnoreNextFileDeletedEventCount++;
+                File.Move(FullPath, newPath);
             }
             else
             {
-                FileSystem.RenameDirectory(FullPath, newName);
+                if (onlyCaseChanged)
+                    RootFolder.IgnoreNextFileDeletedEventCount++;
+                Directory.Move(FullPath, newPath);
             }
 
             return true;

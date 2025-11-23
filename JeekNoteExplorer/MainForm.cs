@@ -729,10 +729,6 @@ partial class MainForm : Form
             if (doc.Name == e.Label)
                 return;
 
-            var newPath = Path.Combine(Path.GetDirectoryName(doc.FullPath)!, e.Label);
-            if (File.Exists(newPath) || Directory.Exists(newPath))
-                return;
-
             if (doc.RenameInFileSystem(e.Label))
                 e.CancelEdit = false;
         }
